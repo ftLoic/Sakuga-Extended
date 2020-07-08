@@ -1,0 +1,40 @@
+{
+    "manifest_version": 2,
+    "name": "Sakuga Extended",
+    "short_name": "Sakuga Extended",
+    "description": "Enjoy a better experience with SAKUGABOORU! Previews on posts, frame control on videos...",
+
+    "version": "0.4.4",
+    "author": "ftLoic",
+
+    "icons": {
+        "128": "icons/logo-128.png",
+        "96": "icons/logo-96.png",
+        "64": "icons/logo-64.png",
+        "32": "icons/logo-32.png"
+    },
+    "browser_action": {
+        "default_icon": {
+            "64": "icons/logo-64.png",
+            "32": "icons/logo-32.png"
+        },
+        "default_title": "Sakuga Extended",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://www.sakugabooru.com/"],
+            "css": ["css/index.css"],
+            "js": ["js/index.js"]
+        },
+        {
+            "matches": ["https://www.sakugabooru.com/post", "https://www.sakugabooru.com/post?*"],
+            "css": ["css/preview.css"],
+            "js": ["js/preview.js"]
+        },
+        {
+            "matches": ["https://www.sakugabooru.com/post/show/*"],
+            "js": ["js/frames.js"]
+        }
+    ]
+}

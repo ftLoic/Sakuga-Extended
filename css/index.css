@@ -1,0 +1,23 @@
+#last-searches {
+    display: block;
+    width: 85%;
+    margin: 10px auto;
+}
+#last-searches p {
+    margin-bottom: 2px;
+}
+.search {
+    display: inline-block;
+    background-color: #EA002D;
+    color: white;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 4px;
+    margin: 2px;
+    cursor: pointer;
+    user-select: none;
+}
+.active {
+    color: #EA002D;
+    background-color: white;
+}

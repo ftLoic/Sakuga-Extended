@@ -1,0 +1,44 @@
+.thumb {
+    position: relative;
+}
+.thumb img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+video {
+    position: relative;
+    top: 0;
+}
+.info {
+    position: absolute;
+    bottom: 0;
+    width: 150px;
+}
+.score {
+    display: block;
+    font-size: 14px;
+    color: #ee8887;
+    font-weight: 700;
+}
+.tags {
+    display: -webkit-box;
+    max-height: 26px;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    font-size: 10px;
+    line-height: 12px;
+    color: rgb(78, 78, 78);
+}
+.authors {
+    color: rgb(119, 118, 97);
+}
+.series {
+    color: rgb(128, 105, 138);
+}
+.styles {
+    color: rgb(85, 116, 80);
+}

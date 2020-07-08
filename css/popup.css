@@ -1,0 +1,138 @@
+body {
+    display: block;
+    box-sizing: border-box;
+    width: 400px;
+    margin: 0;
+    font-family: 'Arial';
+    overflow: hidden;
+}
+/* Block parts */
+#title {
+    display: block;
+    width: 100%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 15px;
+}
+#title span {
+    color: #009cea;
+}
+#subtitle {
+    display: block;
+    width: 100%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 18px;
+    text-align: center;
+}
+#subtitle a {
+    color: #009cea;
+}
+#content {
+    display: block;
+    margin: 20px auto;
+    padding: 8px 15px;
+}
+#credits {
+    display: block;
+    padding: 15px 15px;
+    background-color: rgb(20, 20, 27);
+    color: white;
+    font-size: 14px;
+    text-align: justify;
+}
+#credits p {
+    margin: 20px auto 5px auto;
+}
+#credits a {
+    color: #009cea;
+}
+
+/* Version */
+#version {
+    display: block;
+    background-color: #009cea;
+    color: white;
+    padding: 10px;
+    margin: 0;
+    font-size: 15px;
+
+    border-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#changelog {
+    display: block;
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 7px 7px 7px 14px;
+    list-style-type: none;
+    font-size: 13px;
+
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+
+/* Authors */
+.author {
+    display: flex;
+    width: 100%;
+    margin: 12px auto;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 75px;
+}
+.author img {
+    width: 75px;
+    height: 75px;
+    border-radius: 75px;
+    padding: 5px;
+}
+.author .info {
+    box-sizing: border-box;
+    padding: 5px 0;
+    flex: 0.85;
+    text-align: center;
+}
+.name {
+    line-height: 24px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #009cea;
+}
+.role {
+    font-size: 14px;
+}
+.res {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 5px;
+}
+.res a {
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+    background-size: 70% auto;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    margin: 0 8px;
+    transition: 0.15s;
+}
+.res a:hover {
+    transform: scale(1.1);
+}
+.twitter {
+    background-color: #1DA1F2;
+    background-image: url('../icons/twitter.png');
+}
+.github {
+    background-color: black;
+    background-image: url('../icons/github.png');
+}
+.web {
+    background-color: rgb(84, 125, 250);
+    background-image: url('../icons/web.png');
+}
