@@ -39,7 +39,7 @@ body {
     padding: 15px 15px;
     background-color: rgb(20, 20, 27);
     color: white;
-    font-size: 14px;
+    font-size: 12px;
     text-align: justify;
 }
 #credits p {
@@ -77,17 +77,23 @@ body {
 
 
 /* Authors */
+h4 {
+    display: block;
+    margin: -2px auto 2px auto;
+    text-align: center;
+    font-size: 14px;
+}
 .author {
     display: flex;
-    width: 100%;
+    width: 80%;
     margin: 12px auto;
     background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 75px;
+    border-radius: 60px;
 }
 .author img {
-    width: 75px;
-    height: 75px;
-    border-radius: 75px;
+    width: 60px;
+    height: 60px;
+    border-radius: 60px;
     padding: 5px;
 }
 .author .info {
@@ -102,14 +108,11 @@ body {
     font-weight: 700;
     color: #009cea;
 }
-.role {
-    font-size: 14px;
-}
 .res {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 5px;
+    margin-top: 6px;
 }
 .res a {
     width: 25px;
