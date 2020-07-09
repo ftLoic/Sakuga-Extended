@@ -96,7 +96,7 @@ function _mouseleave(e) {
     preview_img.style.display = "block";
     video.style.display = "none";
 }
-function _onerror(e) {
+function _onerror() {
     video.src = video.src.substr(0, video.src.length-4) + ".webm";
     video.load();
 }
@@ -117,13 +117,12 @@ function abbr(text) {
 var crttime = 0;
 var stop = true;
 var timer = function(){
-    if (video.readyState > 1 && !stop){ //HAVE_CURRENT_DATA
+    if (video.readyState > 1 && !stop) { //HAVE_CURRENT_DATA
         // play whole video in 5 sec (max)
         var inc = video.duration/2 / 5;
         if (inc < 1) inc = 1;
         crttime = (crttime + inc) % video.duration;
         video.currentTime = crttime;
     }
-};
-
+}
 setInterval(timer, 500);

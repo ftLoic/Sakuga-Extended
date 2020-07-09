@@ -5,11 +5,14 @@ https://github.com/KisaragiAyano/web-scripts
 Thanks to him for letting me use his scripts for Sakuga Extended!
 */
 
-let video = document.getElementsByTagName('video')[0];
+var video = document.querySelector('video');
 if (video) {
     let parent = video.parentElement;
     let nfrm = 0, Nfrm;
+
     let control = document.createElement('div');
+    control.style.width = video.width+'px';
+    control.id = "control";
     let text_frm = document.createElement('label');
     text_frm.style.display = 'inline-block';
     text_frm.style.textAlign = 'center';
