@@ -50,8 +50,10 @@ if (video && controls) {
     var sframe = document.createElement('span');
     sframe.innerText = "(24 FPS)";
     var iframe = document.createElement('input');
-    iframe.type  = "text";
+    iframe.type  = "number";
     iframe.value = "24";
+    iframe.min   = "1"; 
+    iframe.max   = "60"; 
     iframe.style.width = "40px";
     iframe.maxLength = 2;
     iframe.oninput = function() {
