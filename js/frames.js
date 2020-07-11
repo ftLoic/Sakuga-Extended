@@ -5,6 +5,7 @@ https://github.com/KisaragiAyano/web-scripts
 Thanks to him for letting me use his scripts for Sakuga Extended!
 */
 
+var framerate = 24;
 var video = document.querySelector('video');
 if (video) {
     let parent = video.parentElement;
@@ -40,20 +41,20 @@ if (video) {
     function show_frm() {
         text_frm.innerText = nfrm+" / "+Nfrm;
     }
-    function seek_frm(){
+    function seek_frm() {
         video.pause();
         nfrm %= Nfrm+1;
-        video.currentTime = nfrm/24;
+        video.currentTime = nfrm/framerate;
         show_frm();
     }
     video.onloadeddata = function() {
         let duration = video.duration;
-        Nfrm = Math.floor(duration*24);
+        Nfrm = Math.floor(duration*framerate);
         show_frm();
     }
     video.onloadeddata();
     video.ontimeupdate = function() {
-        nfrm = Math.round(video.currentTime*24);
+        nfrm = Math.round(video.currentTime*framerate);
         show_frm();
     }
     video.onwheel = function(e) {
@@ -63,13 +64,8 @@ if (video) {
         }
     }
     video.onkeydown = function(e) {
-        switch ((e || window.event).keyCode) {
-            case 188:
-                change_frm(-1);
-                break;
-            case 190:
-                change_frm(1);
-                break;
-        }
+        var key = (e || window.event).key;
+        if (key == "D" || key == "d" || key == "," || key == "?" || key == "<") change_frm(-1);
+        if (key == "F" || key == "f" || key == "." || key == ";" || key == ">") change_frm(1);
     };
 }

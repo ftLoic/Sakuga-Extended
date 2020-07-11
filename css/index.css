@@ -21,3 +21,7 @@
     color: #EA002D;
     background-color: white;
 }
+#thanks {
+    display: block;
+    font-size: 80%;
+}

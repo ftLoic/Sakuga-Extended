@@ -1,0 +1,63 @@
+body {
+    width: 100%;
+    overflow-y: auto;
+}
+/* Block parts */
+#title {
+    font-size: 80px;
+}
+#subtitle {
+    font-size: 24px;
+}
+#content {
+    width: 80%;
+}
+.version {
+    font-size: 20px;
+}
+.changelog {
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 30px;
+}
+h5 {
+    font-size: 14px;
+    margin: 2px auto;
+}
+#credits {
+    padding: 20px 10%;
+    font-size: 15px;
+    text-align: center;
+}
+/* Authors */
+h4 {
+    margin: 7px auto 24px auto;
+    font-size: 32px;
+}
+.author {
+    width: 100%;
+    max-width: 600px;
+}
+.author .pp {
+    width: 80px;
+    height: 80px;
+    border-radius: 80px;
+    margin: 5px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,0.1);
+}
+.name {
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #009cea;
+}
+.res {
+    margin-top: 9px;
+}
+.res a {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+}

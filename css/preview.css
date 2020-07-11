@@ -9,11 +9,14 @@
 video {
     position: relative;
     top: 0;
+    z-index: 1;
 }
 .info {
     position: absolute;
     bottom: 0;
     width: 150px;
+    background: #222;
+    z-index: 2;
 }
 .score {
     display: block;

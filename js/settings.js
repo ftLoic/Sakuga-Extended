@@ -44,6 +44,24 @@ if (video && controls) {
     tgray.appendChild(sgray);
     panel.appendChild(tgray);
     panel.appendChild(igray);
+    // FRAMERATE
+    var tframe = document.createElement('p');
+    tframe.innerText = "Frame control framerate ";
+    var sframe = document.createElement('span');
+    sframe.innerText = "(24 FPS)";
+    var iframe = document.createElement('input');
+    iframe.type  = "text";
+    iframe.value = "24";
+    iframe.style.width = "40px";
+    iframe.maxLength = 2;
+    iframe.oninput = function() {
+        framerate = parseInt(this.value);
+        sframe.innerText = "("+this.value+" FPS)";
+        video.onloadeddata();
+    }
+    tframe.appendChild(sframe);
+    panel.appendChild(tframe);
+    panel.appendChild(iframe);
 
     document.querySelector('.content div').insertBefore(panel, controls);
 
