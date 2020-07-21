@@ -1,0 +1,44 @@
+#post-list {
+    display: flex;
+}
+div.sidebar {
+    width: 200px;
+    float: none;
+}
+div.content {
+    flex: 1;
+    float: none;
+}
+
+ul#post-list-posts {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+ul#post-list-posts li {
+    position: relative;
+    background: #1B1B1B;
+    padding: 10px 5px;
+    margin: 5px;
+    border-radius: 10px;
+}
+.info {
+    background: #1B1B1B;
+}
+a.directlink {
+    margin-top: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    width: 90%;
+    margin: 10px auto 0;
+}
+
+div#paginator a {
+    background-color: #EA002D;
+    border: none;
+    border-radius: 4px;
+    color: white;
+}
+div#paginator a:hover {
+    background-color: #af0023;
+}

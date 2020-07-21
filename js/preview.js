@@ -16,12 +16,17 @@ if (document.getElementById("post-list-posts")) {
     posts = document.getElementById("post-list-posts").children;
 }
 var formats = ['mp4','mkv','webm'];
-var search = document.getElementById('tags').value+" ";
+var search = document.getElementById('tags') ? document.getElementById('tags').value+" " : "";
 for (var i = 0; i < posts.length; i++) {
     var thumb = posts[i].getElementsByClassName("thumb")[0];
     var preview_img = thumb.getElementsByClassName('preview')[0];
     var direct_link = posts[i].getElementsByClassName("directlink")[0];
-    var splitted_url = direct_link.href.split(".");
+    if (direct_link) { // Post
+        var splitted_url = direct_link.href.split(".");
+    } else { // Pools
+        var splitted_url = ["mp4"];
+        posts[i].children[0].style.height = (posts[i].children[0].offsetHeight+41)+"px";
+    }
     if (formats.indexOf(splitted_url[splitted_url.length-1]) > -1) {
         thumb.addEventListener('mouseenter', _mouseenter);
         thumb.addEventListener('mouseleave', _mouseleave);
@@ -34,6 +39,8 @@ for (var i = 0; i < posts.length; i++) {
         preview_img.title.split("Tags: ")[1].split(" User: ")[0],
         preview_img.title.split("User: ")[1]
     ];
+    preview_img.dataset.title = preview_img.title;
+    preview_img.removeAttribute('title');
     var score = document.createElement('span');
     score.className = "score";
     score.innerText = array[1];
@@ -50,7 +57,6 @@ for (var i = 0; i < posts.length; i++) {
     others.className = "others";
 
     var list_tags = array[2].split(" ");
-    console.log(list_tags);
     for (var j = 0; j < list_tags.length; j ++) {
         if (search.indexOf(list_tags[j]+" ") == -1) {
             if (localStorage.tag_data.indexOf("1`"+list_tags[j]+"`") > -1) authors.innerText += list_tags[j]+" ";
@@ -79,13 +85,17 @@ function _mouseenter(e) {
     video.width = preview_img.width;
     video.height = preview_img.height;
     var src = preview_img.src.substr(0, preview_img.src.length-4).replace("preview/","");
-    video.src = src+".mp4";
+    if (preview_img.dataset.src) {
+        video.src = preview_img.dataset.src;
+    } else {
+        video.src = src+".mp4";
+    }
     stop = false;
     crttime = 0;
     thumb.appendChild(video);
     video.style.display = "block";
     video.onplay = function() {
-        preview_img.style.display = "none";
+        preview_img.style.opacity = "0";
     }
 }
 function _mouseleave(e) {
@@ -93,8 +103,9 @@ function _mouseleave(e) {
     video.pause();
     var thumb = e.srcElement;
     var preview_img = thumb.getElementsByClassName("preview")[0];
-    preview_img.style.display = "block";
+    preview_img.style.opacity = "1";
     video.style.display = "none";
+    preview_img.dataset.src = video.src; // save src (in case it was webm)
 }
 function _onerror() {
     video.src = video.src.substr(0, video.src.length-4) + ".webm";

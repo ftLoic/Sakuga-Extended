@@ -5,6 +5,7 @@
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 2;
 }
 video {
     position: relative;
@@ -14,10 +15,12 @@ video {
 .info {
     position: absolute;
     bottom: 0;
-    width: 150px;
+    width: 100%;
     background: #222;
-    z-index: 2;
+    z-index: 3;
 }
+.post-hover {z-index:4!important;}
+.post-hover-overlay {z-index:4!important;}
 .score {
     display: block;
     font-size: 14px;
