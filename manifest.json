@@ -4,7 +4,7 @@
     "short_name": "Sakuga Extended",
     "description": "Enjoy a better experience with SAKUGABOORU! Previews on posts, frame control on videos...",
 
-    "version": "1.1.9",
+    "version": "1.1.9.2",
     "author": "ftLoic",
 
     "icons": {
@@ -44,6 +44,9 @@
             "js": ["js/frames.js","js/settings.js"]
         }
     ],
+    "externally_connectable": {
+        "matches": ["https://www.sakugabooru.com/*"]
+    },
     "web_accessible_resources": [
         "changelog.html", "css/*"
     ]

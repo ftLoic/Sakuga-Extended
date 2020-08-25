@@ -8,7 +8,7 @@ var div = document.createElement('div');
 div.id = "last-searches";
 if (tags.length > 0) {
     var dt = document.createElement('p');
-    dt.innerText = "Recommandations:";
+    dt.innerText = "Recommendations:";
     div.appendChild(dt);
     
     for (var i = 0; i < Math.min(30, tags.length); i ++) {

@@ -11,105 +11,148 @@ video.muted = "true";
 video.loop = "true";
 video.onerror = _onerror;
 
-var posts = [];
-if (document.getElementById("post-list-posts")) {
-    posts = document.getElementById("post-list-posts").children;
-}
-var formats = ['mp4','mkv','webm'];
+var posts = document.querySelectorAll("#post-list-posts > li");
+var formats = ['mp4','mkv','webm','gif'];
 var search = document.getElementById('tags') ? document.getElementById('tags').value+" " : "";
-for (var i = 0; i < posts.length; i++) {
-    var thumb = posts[i].getElementsByClassName("thumb")[0];
-    var preview_img = thumb.getElementsByClassName('preview')[0];
-    var direct_link = posts[i].getElementsByClassName("directlink")[0];
-    if (direct_link) { // Post
-        var splitted_url = direct_link.href.split(".");
-    } else { // Pools
-        var splitted_url = ["mp4"];
-        posts[i].children[0].style.height = (posts[i].children[0].offsetHeight+41)+"px";
-    }
-    if (formats.indexOf(splitted_url[splitted_url.length-1]) > -1) {
-        thumb.addEventListener('mouseenter', _mouseenter);
-        thumb.addEventListener('mouseleave', _mouseleave);
-    }
-    var info = document.createElement('div');
-    info.className = "info";
-    var array = [
-        preview_img.title.split("Rating: ")[1].split(" Score: ")[0],
-        preview_img.title.split("Score: ")[1].split(" Tags: ")[0],
-        preview_img.title.split("Tags: ")[1].split(" User: ")[0],
-        preview_img.title.split("User: ")[1]
-    ];
-    preview_img.dataset.title = preview_img.title;
-    preview_img.removeAttribute('title');
-    var score = document.createElement('span');
-    score.className = "score";
-    score.innerText = array[1];
-    var tags = document.createElement('span');
-    tags.className = "tags";
-
-    var authors = document.createElement('span');
-    authors.className = "authors";
-    var series = document.createElement('span');
-    series.className = "series";
-    var styles = document.createElement('span');
-    styles.className = "styles";
-    var others = document.createElement('span');
-    others.className = "others";
-
-    var list_tags = array[2].split(" ");
-    for (var j = 0; j < list_tags.length; j ++) {
-        if (search.indexOf(list_tags[j]+" ") == -1) {
-            if (localStorage.tag_data.indexOf("1`"+list_tags[j]+"`") > -1) authors.innerText += list_tags[j]+" ";
-            else if (localStorage.tag_data.indexOf("3`"+list_tags[j]+"`") > -1) series.innerText += list_tags[j]+" ";
-            else if (localStorage.tag_data.indexOf("4`"+list_tags[j]+"`") > -1) styles.innerText += list_tags[j]+" ";
-            else others.innerText += list_tags[j]+" ";
+function loadPosts() {
+    for (var i = 0; i < posts.length; i ++) {
+        let thumb = posts[i].getElementsByClassName("thumb")[0];
+        let direct_link = posts[i].getElementsByClassName("directlink")[0];
+        let preview_img = thumb.getElementsByClassName('preview')[0];
+        let splitted_url;
+        if (direct_link) { // Post
+            splitted_url = direct_link.href.split(".");
+        } else { // Pools
+            splitted_url = ["mp4"];
+            posts[i].children[0].style.height = (posts[i].children[0].offsetHeight+41)+"px";
         }
+        let ext = splitted_url[splitted_url.length-1];
+        if (formats.indexOf(ext) > -1) {
+            thumb.onmouseenter = function() {
+                stop = false;
+                video.width = preview_img.width;
+                video.height = preview_img.height;
+                if (direct_link) {
+                    // Thanks to Iluvatar who actually reminded me that I still had to work on the extension :slightlyflustereddoggo:
+                    if (ext == "gif") {
+                        preview_img.dataset.realSrc = preview_img.src;
+                        preview_img.src = direct_link.href;
+                    } else {
+                        video.src = direct_link.href;
+                    }
+                } else {
+                    var src = preview_img.src.substr(0, preview_img.src.length-4).replace("preview/","");
+                    if (preview_img.dataset.src) {
+                        video.src = preview_img.dataset.src;
+                    } else {
+                        video.src = src+".mp4";
+                    }
+                }
+                crttime = 0;
+                thumb.appendChild(video);
+                video.style.display = "block";
+                video.onplay = function() {
+                    preview_img.style.opacity = "0";
+                }
+            };
+            thumb.onmouseleave = function() {
+                stop = true;
+                video.pause();
+                preview_img.style.opacity = "1";
+                video.style.display = "none";
+                if (preview_img.dataset.realSrc) {
+                    preview_img.src = preview_img.dataset.realSrc;
+                }
+                preview_img.dataset.src = video.src; // save src (in case it was webm)
+            };
+        }
+        var info = document.createElement('div');
+        info.className = "info";
+        var array = [
+            preview_img.title.split("Rating: ")[1].split(" Score: ")[0],
+            preview_img.title.split("Score: ")[1].split(" Tags: ")[0],
+            preview_img.title.split("Tags: ")[1].split(" User: ")[0],
+            preview_img.title.split("User: ")[1]
+        ];
+        preview_img.dataset.title = preview_img.title;
+        preview_img.removeAttribute('title');
+        var score = document.createElement('span');
+        score.className = "score";
+        score.innerText = array[1];
+        var tags = document.createElement('span');
+        tags.className = "tags";
+
+        var authors = document.createElement('span');
+        authors.className = "authors";
+        var unknown = document.createElement('span');
+        unknown.className = "authors";
+        var series = document.createElement('span');
+        series.className = "series";
+        var styles = document.createElement('span');
+        styles.className = "styles";
+        var others = document.createElement('span');
+        others.className = "others";
+
+        var list_tags = array[2].split(" ");
+        for (var j = 0; j < list_tags.length; j ++) {
+            if (search.indexOf(list_tags[j]+" ") == -1) {
+                if (localStorage.tag_data.indexOf("1`"+list_tags[j]+"`") > -1) authors.innerText += list_tags[j]+" ";
+                else if (localStorage.tag_data.indexOf("3`"+list_tags[j]+"`") > -1) series.innerText += list_tags[j]+" ";
+                else if (localStorage.tag_data.indexOf("4`"+list_tags[j]+"`") > -1) styles.innerText += list_tags[j]+" ";
+                else if (localStorage.tag_data.indexOf("0`"+list_tags[j]+"`") > -1) others.innerText += list_tags[j]+" ";
+            } else unknown.innerText += list_tags[j]+" ";
+        }
+        series.innerText = abbr(series.innerText);
+        others.innerText = abbr(others.innerText);
+
+        tags.title = array[2];
+        tags.appendChild(authors);
+        tags.appendChild(unknown);
+        tags.appendChild(series);
+        tags.appendChild(styles);
+        tags.appendChild(others);
+
+        info.appendChild(score);
+        info.appendChild(tags);
+        thumb.appendChild(info);
     }
-    series.innerText = abbr(series.innerText);
-    others.innerText = abbr(others.innerText);
-
-    tags.title = array[2];
-    tags.appendChild(authors);
-    tags.appendChild(series);
-    tags.appendChild(styles);
-    tags.appendChild(others);
-
-    info.appendChild(score);
-    info.appendChild(tags);
-    thumb.appendChild(info);
 }
-
-function _mouseenter(e) {
-    var thumb = e.srcElement;
-    var preview_img = thumb.getElementsByClassName('preview')[0];
-    video.width = preview_img.width;
-    video.height = preview_img.height;
-    var src = preview_img.src.substr(0, preview_img.src.length-4).replace("preview/","");
-    if (preview_img.dataset.src) {
-        video.src = preview_img.dataset.src;
-    } else {
-        video.src = src+".mp4";
-    }
-    stop = false;
-    crttime = 0;
-    thumb.appendChild(video);
-    video.style.display = "block";
-    video.onplay = function() {
-        preview_img.style.opacity = "0";
-    }
-}
-function _mouseleave(e) {
-    stop = true;
-    video.pause();
-    var thumb = e.srcElement;
-    var preview_img = thumb.getElementsByClassName("preview")[0];
-    preview_img.style.opacity = "1";
-    video.style.display = "none";
-    preview_img.dataset.src = video.src; // save src (in case it was webm)
+if (localStorage.tag_data) {
+    loadPosts();
+} else {
+    window.addEventListener("message", function(event) {
+        if (event.source != window) return;
+        if (event.data.type && event.data.text && (event.data.type === "FROM_PAGE" && event.data.text === "we_can_catch_the_tag")) {
+            console.log("Request result:",event.data);
+            loadPosts();
+        }
+    });
+    var script = document.createElement('script');
+    script.defer = true;
+    script.innerHTML = `
+    jQuery.ajax({
+        url: "/tag/summary.json",
+        dataType: "json"
+    }).done((function(_this) {
+        return function(json) {
+            if (json.unchanged) {
+                _this.tag_data = localStorage.tag_data;
+            } else {
+                _this.tag_data = json.data;
+                localStorage.tag_data = _this.tag_data;
+                localStorage.tag_data_version = json.version;
+            }
+            window.postMessage({type: "FROM_PAGE", text: "we_can_catch_the_tag"}, "*");
+        };
+    })(this));`;
+    document.body.append(script);
+    
 }
 function _onerror() {
-    video.src = video.src.substr(0, video.src.length-4) + ".webm";
-    video.load();
+    if (video.src.indexOf('.webm') === -1) {
+        video.src = video.src.substr(0, video.src.length-4) + ".webm";
+        video.load();
+    }
 }
 function abbr(text) {
     text = text.replace(/presumed/g, "?");
@@ -127,8 +170,8 @@ function abbr(text) {
 
 var crttime = 0;
 var stop = true;
-var timer = function(){
-    if (video.readyState > 1 && !stop) { //HAVE_CURRENT_DATA
+var timer = function() {
+    if (video.readyState > 1 && !stop) { // HAVE_CURRENT_DATA
         // play whole video in 5 sec (max)
         var inc = video.duration/2 / 5;
         if (inc < 1) inc = 1;
