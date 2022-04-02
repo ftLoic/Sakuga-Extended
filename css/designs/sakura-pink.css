@@ -1,0 +1,20 @@
+:root {
+    --main-bg3: rgb(30, 20, 30);
+    --main-bg2: rgb(20, 10, 20);
+    --main-bg: rgb(10, 0, 10);
+    --main-header-bg: var(--main-color);
+    --main-header-color: white;
+
+    --main-text: white;
+    --main-color: rgb(255, 71, 108);
+    --main-link: var(--main-color);
+
+    --main-video-bg: rgb(10, 0, 10);
+    --main-video-bg2: rgb(20, 10, 20);
+    --main-video-bg3: rgb(30, 20, 30);
+    --main-video-header: var(--main-color);
+
+    --tag-artist: #ee954c;
+    --tag-copyright: rgb(211, 73, 100);
+    --tag-meta: #CE0B0B;
+}

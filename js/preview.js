@@ -14,7 +14,7 @@ video.onerror = _onerror;
 var posts = document.querySelectorAll("#post-list-posts > li");
 var formats = ['mp4','mkv','webm','gif'];
 var search = document.getElementById('tags') ? document.getElementById('tags').value+" " : "";
-function loadPosts() {
+function loadPosts(data) {
     for (var i = 0; i < posts.length; i ++) {
         let thumb = posts[i].getElementsByClassName("thumb")[0];
         let direct_link = posts[i].getElementsByClassName("directlink")[0];
@@ -67,7 +67,7 @@ function loadPosts() {
             };
         }
         var info = document.createElement('div');
-        info.className = "info";
+        info.className = "post-detail";
         var array = [
             preview_img.title.split("Rating: ")[1].split(" Score: ")[0],
             preview_img.title.split("Score: ")[1].split(" Tags: ")[0],
@@ -92,39 +92,59 @@ function loadPosts() {
         styles.className = "styles";
         var others = document.createElement('span');
         others.className = "others";
+        var presumed = document.createElement('span');
+        presumed.className = "presumed";
 
         var list_tags = array[2].split(" ");
         for (var j = 0; j < list_tags.length; j ++) {
             if (search.indexOf(list_tags[j]+" ") == -1) {
-                if (localStorage.tag_data.indexOf("1`"+list_tags[j]+"`") > -1) authors.innerText += list_tags[j]+" ";
-                else if (localStorage.tag_data.indexOf("3`"+list_tags[j]+"`") > -1) series.innerText += list_tags[j]+" ";
-                else if (localStorage.tag_data.indexOf("4`"+list_tags[j]+"`") > -1) styles.innerText += list_tags[j]+" ";
-                else if (localStorage.tag_data.indexOf("0`"+list_tags[j]+"`") > -1) others.innerText += list_tags[j]+" ";
-            } else unknown.innerText += list_tags[j]+" ";
+                if (list_tags[j] == "presumed") {
+                    presumed.innerText = "(?) ";
+                } else {
+                    if (localStorage.tag_data.indexOf("1`"+list_tags[j]+"`") > -1) authors.innerText += list_tags[j]+" ";
+                    else if (localStorage.tag_data.indexOf("3`"+list_tags[j]+"`") > -1) series.innerText += list_tags[j]+" ";
+                    else if (localStorage.tag_data.indexOf("4`"+list_tags[j]+"`") > -1) styles.innerText += list_tags[j]+" ";
+                    else if (localStorage.tag_data.indexOf("0`"+list_tags[j]+"`") > -1) others.innerText += list_tags[j]+" ";
+                    else unknown.innerText += list_tags[j]+" "
+                }
+            }
         }
         series.innerText = abbr(series.innerText);
-        others.innerText = abbr(others.innerText);
 
         tags.title = array[2];
         tags.appendChild(authors);
         tags.appendChild(unknown);
+        tags.appendChild(presumed);
         tags.appendChild(series);
         tags.appendChild(styles);
         tags.appendChild(others);
 
-        info.appendChild(score);
-        info.appendChild(tags);
+        if (data == undefined) {
+            data = {'score': true, 'tags': true};
+        }
+        if (data['score'] != false) {
+            info.appendChild(score);
+        } else {
+            tags.setAttribute('style', '-webkit-line-clamp: 3;max-height: 39px;');
+        }
+        if (data['tags'] != false) {
+            info.appendChild(tags);
+        }
         thumb.appendChild(info);
     }
 }
 if (localStorage.tag_data) {
-    loadPosts();
+    chrome.storage.sync.get(['optionalInfo'], function(data) {
+        loadPosts(data.optionalInfo);
+    });
 } else {
     window.addEventListener("message", function(event) {
         if (event.source != window) return;
         if (event.data.type && event.data.text && (event.data.type === "FROM_PAGE" && event.data.text === "we_can_catch_the_tag")) {
             console.log("Request result:",event.data);
-            loadPosts();
+            chrome.storage.sync.get(['optionalInfo'], function(data) {
+                loadPosts(data.optionalInfo);
+            });
         }
     });
     var script = document.createElement('script');
@@ -155,8 +175,6 @@ function _onerror() {
     }
 }
 function abbr(text) {
-    text = text.replace(/presumed/g, "?");
-    text = text.replace(/artist_unknown/g, "ano");
     text = text.replace(/background/g, "bg");
 
     text = text.replace(/mob_psycho/g, "mob");
@@ -165,6 +183,7 @@ function abbr(text) {
     text = text.replace(/shingeki_no_kyojin/g, "snk");
     text = text.replace(/sword_art_online/g, "sao");
     text = text.replace(/re:_zero_kara_hajimeru_isekai_seikatsu/g, "re:_zero");
+    text = text.replace(/boruto:_naruto_next_generations/g, "boruto");
     return text;
 }
 

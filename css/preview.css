@@ -12,7 +12,7 @@ video {
     top: 0;
     z-index: 1;
 }
-.info {
+.post-detail {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -39,12 +39,7 @@ video {
     line-height: 12px;
     color: rgb(78, 78, 78);
 }
-.authors {
-    color: rgb(119, 118, 97);
-}
-.series {
-    color: rgb(128, 105, 138);
-}
-.styles {
-    color: rgb(85, 116, 80);
-}
+.authors {color: rgb(119, 118, 97);}
+.series {color: rgb(128, 105, 138);}
+.styles {color: rgb(85, 116, 80);}
+.presumed {color: rgb(146, 115, 115);}

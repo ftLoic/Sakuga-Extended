@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAKUGA EXTENDED</title>
     <link rel="stylesheet" href="css/popup.css">
+    <script src="js/popup.js" defer></script>
 </head>
 <body>
     <div id="title">
@@ -14,44 +15,67 @@
         Click <a href="https://www.sakugabooru.com/" target="_blank">here</a> to test it on SAKUGABOORU!
     </div>
 
-    <div id="content">
-        <h4 class="version">Features:</h4>
-        <ul class="changelog">
-            <li>- Recommandations on the index</li>
-            <li>- Video previews on posts, pools, profiles</li>
-            <li>- Frame control. Shortcuts depend on your keyboard:<br>&nbsp; <b>D</b>/<b>F</b>, <b>&lt;</b>/<b>&gt;</b>, <b>,</b>/<b>;</b>, or Shift + Mousewheel</li>
-            <li>- Score and tags (with abbreviations)</li>
-            <li>- Video settings (speed, grayscale)</li>
-            <li>- <strong>(NEW)</strong> Sakuga Extended Search</li>
-            <a href="changelog.html" target="_blank" class="btn">See all (changelog)</a>
-        </ul>
+    <div class="title">
+        <div class="icon icon-sparkles"></div>
+        <div class="desc">FEATURES</div>
+    </div>
+    <div class="content">
+        <li>- Video/GIF previews on posts, pools, profiles</li>
+        <li>- Frame step with <b>D</b><b>F</b>, <b>&lt;</b><b>&gt;</b>, <b>,</b><b>;</b>, Shift Mousewheel</li>
+        <li>- Score and tags, average color</li>
+        <li>... and more!</li>
+        <a href="changelog.html" target="_blank" class="btn btn-full">Full changelog</a>
+    </div>
+
+    <div class="title">
+        <div class="icon icon-games"></div>
+        <div class="desc">GAMES</div>
+    </div>
+    <div class="content center">
+        <a class="btn" href="../html/sakutrain/index.html" target="_blank">SAKUTRAIN</a>
+        <a class="btn" href="../html/panda/index.html" target="_blank">PANDA GAME</a>
+    </div>
+
+    <div class="title">
+        <div class="icon icon-palette"></div>
+        <div class="desc">DESIGN</div>
+    </div>
+    <div class="content center">
+        Choose your theme! <select id="theme">
+            <option value="classic">Classic</option>
+            <option value="classic-v2">Classic V2</option>
+            <option value="vampire-black">Vampire Black</option>
+            <option value="dark-red">Dark Red</option>
+            <option value="flash-red">Flash Red</option>
+            <option value="dark-pink">Dark Pink</option>
+            <option value="sakura-pink">Sakura Pink</option>
+            <option value="cursed-light">Cursed Light</option>
+        </select>
+        <p style="text-align: left;margin: 0;margin-left: 38px;">
+            <label for="score">
+                <input type="checkbox" id="score">
+                Show score
+            </label>
+            <label for="default_player">
+                <input type="checkbox" id="default_player">
+                Use default player
+            </label>
+            <br>
+            <label for="tags">
+                <input type="checkbox" id="tags">
+                Show tags
+            </label>
+            <label for="recommendations">
+                <input type="checkbox" id="recommendations">
+                Show recommendations
+            </label>
+        </p>
     </div>
     <div id="credits">
-        <h4>Creators</h4>
-        <div class="author">
-            <div class="pp" style="background-image: url(https://avatars0.githubusercontent.com/u/36301183?size=150);"></div>
-            <div class="info">
-                <div class="name">Loïc <small>@ftLoic</small></div>
-                <div class="res">
-                    <a class="twitter" href="https://twitter.com/ftLoic" target="_blank"></a>
-                    <a class="github" href="https://github.com/ftLoic" target="_blank"></a>
-                    <a class="web" href="https://wevolve.yt" target="_blank"></a>
-                </div>
-            </div>
-        </div>
-        <div class="author">
-            <div class="pp" style="background-image: url(https://avatars0.githubusercontent.com/u/8342552?size=150);"></div>
-            <div class="info">
-                <div class="name">肉機械 <small>@NikuKikai</small></div>
-                <div class="res">
-                    <a class="twitter" href="https://twitter.com/NikuKikai" target="_blank"></a>
-                    <a class="github" href="https://github.com/NikuKikai" target="_blank"></a>
-                    <a class="web" href="https://nikukikai.art/" target="_blank"></a>
-                </div>
-            </div>
-        </div>
         <p>
-            Click <a href="https://github.com/ftLoic/Sakuga-Extended" target="_blank">here</a> to access the GitHub page for Sakuga Extended. Thanks to NikuKikai for letting me use his scripts for the extension! You also can check his original GitHub <a href="https://github.com/NikuKikai/web-scripts" target="_blank">here</a>.
+            Made with ❤ by <a href="https://twitter.com/ftLoic" target="_blank">@ftLoic</a> - Original concept by <a href="https://twitter.com/NikuKikai" target="_blank">@NikuKikai</a>.
+            <br>
+            Click <a href="https://github.com/ftLoic/Sakuga-Extended" target="_blank">here</a> to access the GitHub page
         </p>
     </div>
 </body>

@@ -1,0 +1,126 @@
+@font-face {
+    font-family: 'Montserrat-ExtraBold';
+    src: url('Montserrat-ExtraBold.ttf');
+}
+@font-face {
+    font-family: 'Montserrat-Bold';
+    src: url('Montserrat-Bold.ttf');
+}
+body {
+    background-color: rgb(35, 35, 40);
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial';
+}
+
+#header {
+    display: flex;
+    width: 852px;
+    margin: 0 auto;
+
+    flex-direction: column;
+    align-items: center;
+}
+.header-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.title img {
+    width: 100px;
+    height: 67px;
+    margin-right: 20px;
+}
+.title {
+    font-size: 70px;
+    font-family: 'Montserrat-ExtraBold';
+}
+.description {
+    font-size: 21px;
+    font-family: 'Montserrat-Bold';
+}
+.description span {
+    display: inline;
+    margin: 0px 10px;
+}
+#content {
+    display: block;
+    box-sizing: border-box;
+    width: 852px;
+    min-height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 20px auto;
+}
+#answers {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.answer {
+    width: calc(50% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    text-transform: capitalize;
+    font-size: 16px;
+}
+.answer:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+video {
+    width: 852px;
+    height: 480px;
+    outline: none;
+}
+a {
+    color: #ee8887;
+}
+
+.answer-true {background-color: rgb(43, 199, 56);}
+.answer-true:hover {background-color: rgb(43, 199, 56);}
+.answer-false {background-color: rgb(199, 43, 43);}
+.answer-false:hover {background-color: rgb(199, 43, 43);}
+
+#bottom {
+    display: block;
+    width: 852px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+}
+textarea {
+    display: block;
+    width: calc(100% - 5px);
+    height: 105px;
+    min-height: 46px;
+    resize: vertical;
+    outline: none;
+}
+#tags_info {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+#warning {
+    color: rgb(235, 92, 92);
+}
+#bottom h4 {
+    margin-bottom: 3px;
+    font-size: 16px;
+    font-weight: bold;
+}
+#footer {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.footer-box {
+    width: 854px;
+    margin: 0 auto;
+}

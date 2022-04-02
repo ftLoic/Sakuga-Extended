@@ -1,0 +1,26 @@
+.corner {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0px;
+    height: 0px;
+    border-style: inset;
+    transition: border-color 2s;
+}
+.corner-1 {
+    border-width: 150px 150px 0px 0px;
+    border-color: #E9002D transparent;
+    z-index: 2;
+}
+.corner-2 {
+    border-width: 160px 160px 0px 0px;
+    border-color: #bb0025 transparent;
+    z-index: 1; 
+}
+.corner p {
+    float: left;
+    margin-top: -100px;
+    margin-left: -10px;
+    transform: rotate(-45deg);
+    font-size: 20px;
+}
+.weirdchamp {border-color: #92001d transparent;}

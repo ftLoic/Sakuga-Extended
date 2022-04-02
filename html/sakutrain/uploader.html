@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakutrain</title>
+    <link rel="stylesheet" href="index.css">
+    <script defer src="uploader.js"></script>
+</head>
+<body>
+    <div id="header">
+        <div class="header-row title">
+            <img src="logo.png">
+            SAKUTRAIN
+        </div>
+        <div class="header-row description">
+            CORRECT: <span id="correct">0</span>
+            <span></span>
+            WRONG: <span id="wrong">0</span>
+            <span></span>
+            <button id="reset">Reset</button>
+        </div>
+    </div>
+    <div id="content">
+        <!-- Video to show -->
+        <video id="vid" autoplay muted loop controls></video>
+        <!-- Preload the video without showing it -->
+        <video id="temp" autoplay muted style="display: none;"></video>
+        
+        <div id="answers">
+            <div class="answer answer-a"></div>
+            <div class="answer answer-b"></div>
+            <div class="answer answer-c"></div>
+            <div class="answer answer-d"></div>
+        </div>
+    </div>
+    <div id="bottom">
+        <h4>Tags to draw (delimited by commas)</h4>
+        <textarea id="tags"></textarea>
+        <h4>List of posts (a video caught your attention?)</h4>
+        <div id="last_posts"></div>
+    </div>
+    <div id="footer">
+        <div class="footer-box">
+            Created by Loïc (<a href="https://twitter.com/ftLoic" target="_blank">@ftLoic</a>) - All the medias are drawn from <a href="https://sakugabooru.com" target="_blank">sakugabooru.com</a>.
+        </div>
+    </div>
+</body>
+</html>

@@ -1,17 +1,76 @@
 body {
     display: block;
     box-sizing: border-box;
-    width: 400px;
+    width: 360px;
     margin: 0;
     font-family: 'Arial';
     overflow: hidden;
 }
+
+
+.title {
+    display: flex;
+    width: 100%;
+    color: white;
+}
+.content {
+    display: block;
+    padding: 15px;
+    font-size: 13px;
+    line-height: 16px;
+}
+.content.center {
+    text-align: center;
+}
+.content li {
+    display: block;
+    list-style-type: none;
+}
+.content li b {
+    background-color: rgb(33, 33, 37);
+    color: white;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 11px;
+    line-height: 20px;
+    margin: 0 1px;
+}
+.icon {
+    position: absolute;
+    margin-top: -10px;
+    border: 7px solid #009cea;
+    background-color: white;
+    box-sizing: border-box;
+    font-size: 26px;
+    border-radius: 40px;
+    line-height: 46px;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    background-position: center;
+    background-size: 70% auto;
+    background-repeat: no-repeat;
+}
+.icon-sparkles {background-image: url('../icons/sparkles.png');}
+.icon-games {background-image: url('../icons/games.png');}
+.icon-palette {background-image: url('../icons/palette.png');}
+.desc {
+    flex: 1;
+    background-color: #009cea;
+    font-size: 18px;
+    line-height: 40px;
+    height: 40px;
+    text-align: center;
+}
+
+
+
 /* Block parts */
 #title {
     display: block;
     width: 100%;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-size: 40px;
+    font-size: 36px;
     font-weight: bold;
     text-align: center;
     padding-top: 15px;
@@ -25,6 +84,7 @@ body {
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 18px;
     text-align: center;
+    margin-bottom: 20px;
 }
 #subtitle a {
     color: #009cea;
@@ -34,6 +94,35 @@ body {
     margin: 20px auto;
     padding: 0px 15px;
 }
+
+#styles {
+    display: flex;
+    padding: 15px 15px;
+    /* background-color: rgb(230, 230, 230); */
+    color: white;
+    font-size: 12px;
+    text-align: justify;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.design {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(232, 232, 232);
+    color: black;
+    font-size: 12px;
+    padding: 7px;
+    border-radius: 5px;
+    margin: 5px 0px;
+}
+.design span {
+    padding: 5px 2px 1px 3px;
+}
+.design img {
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.15);
+    width: 160px;
+}
+
 #credits {
     display: block;
     padding: 15px 15px;
@@ -43,59 +132,40 @@ body {
     text-align: justify;
 }
 #credits p {
-    margin: 20px auto 5px auto;
+    margin: 5px auto;
 }
 #credits a {
     color: #009cea;
 }
 
-/* Version */
-.version {
-    display: block;
-    background-color: #009cea;
-    color: white;
-    padding: 10px;
-    margin: 0;
-    font-size: 15px;
-
-    border-radius: 5px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
-.changelog {
-    display: block;
-    background-color: #f3f3f3;
-    margin: 0;
-    padding: 7px 7px 7px 14px;
-    list-style-type: none;
-    font-size: 13px;
-
-    border-radius: 5px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-.changelog li b {
-    background-color: rgb(33, 33, 37);
-    color: white;
-    border-radius: 4px;
-    padding: 2px 4px;
-    line-height: 20px;
-}
 .btn {
-    display: block;
-    width: max-content;
-    background-color: #009cea;
+    display: inline-block;
+    background-color: #0097e2;
     color: white;
     padding: 4px 6px;
     border-radius: 8px;
     border: none;
-    margin: 5px auto 0px auto;
+    margin: 5px;
     font-size: 14px;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
 }
-
+.btn-full {
+    display: block;
+    width: max-content;
+    margin: 5px auto 0px auto;
+}
+select {
+    display: inline-block;
+    padding: 2px 3px;
+    border-radius: 8px;
+    margin: 0 5px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+}
 
 /* Authors */
 h4 {

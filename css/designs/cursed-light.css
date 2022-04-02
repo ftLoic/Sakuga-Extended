@@ -1,0 +1,22 @@
+:root {
+    --main-bg: rgb(245, 245, 245);
+    --main-bg2: rgb(225, 225, 225);
+    --main-bg3: rgb(200, 200, 200);
+
+    --main-text: rgb(34, 34, 34);
+    --main-color: rgb(234, 0, 45);
+    --main-link: rgb(234, 0, 45);
+
+    --main-video-bg: rgb(245, 245, 245);
+    --main-video-bg2: rgb(230, 230, 230);
+    --main-video-bg3: rgb(230, 230, 230);
+    --main-header-bg: rgb(207, 207, 207);
+    --main-header-color: rgb(34, 34, 34);
+
+    --tag-artist: #c47a0d;
+    --tag-copyright: #D0D;
+    --tag-meta: #CE0B0B;
+}
+input[type="text"] {
+    border: 1px solid black!important;
+}

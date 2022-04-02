@@ -1,0 +1,21 @@
+:root {
+    --main-bg3: rgb(30, 20, 30);
+    --main-bg2: rgb(20, 10, 20);
+    --main-bg: rgb(10, 0, 10);
+    --main-header-bg: var(--main-bg3);
+    --main-header-color: rgb(255, 71, 108);
+
+    --main-text: white;
+    --main-color: var(--main-bg3);
+    --main-link: rgb(211, 73, 100);
+
+    --main-video-bg: rgb(10, 0, 10);
+    --main-video-bg2: rgb(20, 10, 20);
+    --main-video-bg3: rgb(30, 20, 30);
+    --main-video-header: var(--main-video-bg2);
+
+    --tag-artist: #ee954c;
+    --tag-copyright: #e940cd;
+    --tag-meta: #CE0B0B;
+    --tag-general: #d4d3c9;
+}

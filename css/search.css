@@ -2,3 +2,29 @@
     display: block;
     margin: 5px auto;
 }
+#color-btn {
+    display: block;
+    width: 100%;
+    max-width: 140px;
+    border: 1px solid #666;
+    color: #666;
+    background: inherit;
+    outline: none;
+    cursor: pointer;
+}
+#color-btn:hover {
+    border: 1px solid #888;
+    color: #888;
+}
+#color-panel {
+    width: 100%;
+    max-width: 140px;
+    height: 50px;
+    display: block;
+    box-sizing: border-box;
+    font-family: 'Consolas', 'sans-serif';
+    padding: 32px 6px 0;
+    font-size: 10px;
+    color: white;
+    text-align: right;
+}

@@ -15,11 +15,6 @@ body {
 .version {
     font-size: 20px;
 }
-.changelog {
-    font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 30px;
-}
 h5 {
     font-size: 14px;
     margin: 2px auto;
@@ -60,4 +55,39 @@ h4 {
     width: 30px;
     height: 30px;
     border-radius: 30px;
+}
+
+.changelog {
+    display: block;
+    background-color: #f3f3f3;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0;
+    margin-bottom: 30px;
+    padding: 7px 7px 7px 14px;
+    list-style-type: none;
+    font-size: 13px;
+
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.changelog li b {
+    background-color: rgb(33, 33, 37);
+    color: white;
+    border-radius: 4px;
+    padding: 2px 4px;
+    line-height: 20px;
+}
+.version {
+    display: block;
+    background-color: #009cea;
+    color: white;
+    padding: 10px;
+    margin: 0;
+    font-size: 15px;
+
+    border-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }

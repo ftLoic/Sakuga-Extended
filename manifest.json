@@ -4,7 +4,7 @@
     "short_name": "Sakuga Extended",
     "description": "Enjoy a better experience with SAKUGABOORU! Previews on posts, frame control on videos...",
 
-    "version": "1.1.9.2",
+    "version": "2.0.3",
     "author": "ftLoic",
 
     "icons": {
@@ -23,12 +23,19 @@
     },
     "content_scripts": [
         {
+            "matches": ["https://www.sakugabooru.com/*"],
+            "run_at": "document_idle",
+            "js": ["js/redesign.js"]
+        },
+        {
             "matches": ["https://www.sakugabooru.com/"],
+            "run_at": "document_idle",
             "css": ["css/index.css"],
             "js": ["js/index.js"]
         },
         {
             "matches": ["https://www.sakugabooru.com/post", "https://www.sakugabooru.com/post?*", "https://www.sakugabooru.com/post/popular*", "https://www.sakugabooru.com/pool/show*", "https://www.sakugabooru.com/user/show/*"],
+            "run_at": "document_idle",
             "css": ["css/preview.css"],
             "js": ["js/preview.js"]
         },
@@ -36,18 +43,22 @@
             "matches": ["https://www.sakugabooru.com/post", "https://www.sakugabooru.com/post?*", "https://www.sakugabooru.com/post/popular*"],
             "run_at": "document_end",
             "css": ["css/search.css"],
-            "js": ["js/search.js"]
+            "js": ["js/search.js", "js/fastaveragecolor.js"]
         },
         {
             "matches": ["https://www.sakugabooru.com/post/show/*"],
-            "css": ["css/post.css"],
-            "js": ["js/frames.js","js/settings.js"]
+            "run_at": "document_idle",
+            "css": ["css/post.css", "css/search.css"],
+            "js": ["js/frames.js", "js/settings.js", "js/libgif.js", "js/search.js"]
         }
+    ],
+    "permissions": [
+        "storage", "https://www.sakugabooru.com/*"
     ],
     "externally_connectable": {
         "matches": ["https://www.sakugabooru.com/*"]
     },
     "web_accessible_resources": [
-        "changelog.html", "css/*"
+        "changelog.html", "css/*", "html/*", "fonts/*"
     ]
 }
