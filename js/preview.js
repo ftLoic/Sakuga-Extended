@@ -20,6 +20,11 @@ function loadPosts(data) {
         let direct_link = posts[i].getElementsByClassName("directlink")[0];
         let preview_img = thumb.getElementsByClassName('preview')[0];
         let splitted_url;
+        if (location.href.indexOf("d%3A%3E%3D0") > 0) {
+            if (thumb.querySelector("img").src == "https://www.sakugabooru.com/deleted-preview.png") {
+                thumb.querySelector("img").src = "https://www.sakugabooru.com/data/preview/"+direct_link.href.split("/")[4].substr(0, 32)+".jpg";
+            }
+        }
         if (direct_link) { // Post
             splitted_url = direct_link.href.split(".");
         } else { // Pools
