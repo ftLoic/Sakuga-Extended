@@ -54,7 +54,7 @@
         {
             "matches": ["https://www.sakugabooru.com/data/*"],
             "run_at": "document_idle",
-            "css": ["css/post.css", "css/frameTest.css"],
+            "css": ["css/post.css"],
             "js": ["js/framesData.js", "js/libgif.js"]
         }
     ],
