@@ -246,8 +246,6 @@ tbody tr:not(.even):not(.odd) > td:nth-child(1), th {
     border-top-width: 20px;
 }
 
-
-
 /* ==================================== VIDEO MODE ==================================== */
 .action-post-show > body {
     background-color: var(--main-video-bg)!important;
@@ -276,6 +274,11 @@ tbody tr:not(.even):not(.odd) > td:nth-child(1), th {
 }
 .action-post-show .tag-completion-box .remove-recent-tag {
     background-color: var(--main-video-bg3)!important;
+}
+.controlDataVideo label {
+    font-family: verdana, sans-serif;
+    font-weight: bold;
+    font-size: 80%;
 }
 
 @media screen and (max-width: 1080px) {
