@@ -16,8 +16,20 @@
     color: #666;
     min-width: 600px!important;
 }
+.controlDataVideo {
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: 300px;
+    transform: translate(-50%, 0%);
+}
+#divGif {
+    margin: auto;
+    text-align: center;
+}
 #currentArtist {
-    padding-left: 20px;   
+    padding-left: 20px;
 }
 .gif {
     display: flex;
