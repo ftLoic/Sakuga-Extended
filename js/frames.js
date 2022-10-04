@@ -110,19 +110,8 @@ function updateArtist() {
 }
 
 // Remove private pools
-var code = `
-var pools = Object.keys(Pool.pools);
-if (pools.length > 0) {
-    for (var i = 0; i < pools.length; i ++) {
-        var pool = Pool.pools[pools[i]];
-        if ((!pool.is_public && pool.user_id != User.get_current_user_id())) {
-            document.getElementById('pool'+pool.id).style.display = "none";
-        }
-    }
-}
-`;
 var script = document.createElement('script');
-script.innerHTML = code;
+script.src = chrome.runtime.getURL('js/framesScript.js');
 (document.head || document.documentElement).appendChild(script);
 
 // Show anyway
