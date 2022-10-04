@@ -5,7 +5,7 @@ https://github.com/KisaragiAyano/web-scripts
 Thanks to him for letting me use his scripts for Sakuga Extended!
 */
 
-var id,
+var idHash, linkBooru, linkPost,
     framerate = 24,
     frames = frame = 0,
     frames_html5 = 1/40,
@@ -13,9 +13,19 @@ var id,
     video = document.querySelector('video'),
     img = document.querySelector('img'),
     isGif = (img && /.gif$/.test(img.src) && !/Firefox\//.test(navigator.userAgent)), // Not supported
+    booruLink = document.createElement('a'),
     gif, seek, control, text_frm, slider, play_gif, artistPartsConfirmed = 0, artistFrames;
 try {
-    id = /show\/([0-9]+)/.exec(location.href)[1];
+    idHash = /data\/([0-9a-z]+)/.exec(location.href)[1];
+    linkBooru = "https://www.sakugabooru.com/post.json?tags=md5%3A" + idHash;
+    fetch(linkBooru).then(res => {
+        res.json().then(posts => {
+            if (posts && posts.length == 1) {
+                linkPost = "https://www.sakugabooru.com/post/show/" + posts[0].id;
+                booruLink.href = linkPost;
+            }
+        });
+    });
 } catch {}
 
 // From Sakuga Encode
@@ -95,6 +105,16 @@ if (video || isGif) {
             control.appendChild(btn);
         }
     }
+
+    //br to separate control and booru link
+    var breakLine = document.createElement('br');
+    control.appendChild(breakLine);
+
+    //Link to the booru post
+    var booruLinkText = document.createTextNode("Link to the post");
+    booruLink.appendChild(booruLinkText); 
+    booruLink.id = 'booruLink';
+    control.appendChild(booruLink); 
 
     document.querySelector('body').appendChild(control);
 }
