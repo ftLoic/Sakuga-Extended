@@ -1,10 +1,13 @@
 function reloadBooru() {
     chrome.tabs.query({currentWindow: true}, function(tabs) {
-        console.log(tabs)
+        console.log("test");
+        console.log(tabs);
         for (var tab = 0; tab < tabs.length; tab ++) {
             if (tabs[tab].url && tabs[tab].url.indexOf("sakugabooru.com") > -1) {
-                var code = 'window.location.reload();';
-                chrome.tabs.executeScript(tabs[tab].id, {code: code});
+                chrome.scripting.executeScript({
+                    target: {tabId: tabs[tab].id},
+                    files: ['js/popup-script.js']
+                });
             }
         }
     });
