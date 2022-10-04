@@ -125,7 +125,7 @@ if (video && controls) {
     settings.style.float = "right";
     settings.onclick = function() {
         if (settings.innerText == "Panda game!") {
-            window.open(chrome.extension.getURL('html/panda/index.html'));
+            window.open(chrome.runtime.getURL('html/panda/index.html'));
             return;
         }
         if (panel.style.display == "none") {
