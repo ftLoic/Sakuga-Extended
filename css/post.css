@@ -24,6 +24,10 @@
     margin-top: 300px;
     transform: translate(-50%, 0%);
 }
+#booruLink {
+    margin-top: 20px;
+    display: inline-block;
+}
 #divGif {
     margin: auto;
     text-align: center;
