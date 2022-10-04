@@ -59,7 +59,7 @@
         }
     ],
     "permissions": [
-        "storage"
+        "storage", "scripting"
     ],
     "host_permissions" : [
         "https://www.sakugabooru.com/*"

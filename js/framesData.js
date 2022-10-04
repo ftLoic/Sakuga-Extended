@@ -144,7 +144,6 @@ if (video) {
         if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
             if ((!e.ctrlKey && (e.key == "D" || e.key == "d")) || e.key == "," || e.key == "?" || e.key == "<") seek(-1);
             if ((!e.ctrlKey && (e.key == "F" || e.key == "f")) || e.key == "." || e.key == ";" || e.key == ">") seek(1);
-            if (!e.ctrlKey && e.key == "-") document.getElementById('flip').click();
             if (document.activeElement.tagName !== "VIDEO") {
                 if (e.key == "ArrowLeft") seek(-1);
                 if (e.key == "ArrowRight") seek(1);
@@ -261,7 +260,6 @@ if (isGif) { // Gif
                     var key = (e || window.event).key;
                     if (key == "D" || key == "d" || key == "," || key == "?" || key == "<" || key == "ArrowLeft") seek(-1);
                     if (key == "F" || key == "f" || key == "." || key == ";" || key == ">" || key == "ArrowRight") seek(1);
-                    if (!e.ctrlKey && e.key == "-") document.getElementById('flip').click();
                     if (key == " ") play_gif.onclick();
                 }
             };
