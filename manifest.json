@@ -67,9 +67,10 @@
     "externally_connectable": {
         "matches": ["https://www.sakugabooru.com/*"]
     },
-    "web_accessible_resources": [{
-        "resources": ["changelog.html", "css/*", "html/*", "fonts/*"],
-        "matches" : ["https://www.sakugabooru.com/*"]
-    }
+    "web_accessible_resources": [
+        {
+            "resources": ["changelog.html", "css/*", "html/*", "fonts/*", "js/framesScript.js"],
+            "matches" : ["https://www.sakugabooru.com/*"]
+        }
     ]
 }

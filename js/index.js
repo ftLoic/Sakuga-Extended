@@ -44,14 +44,14 @@ thanks.innerText = "Thank you for using the last version of Sakuga Extended! You
 
 var thanksa = document.createElement('a');
 thanksa.innerText = "here";
-thanksa.href = chrome.extension.getURL('changelog.html');
+thanksa.href = chrome.runtime.getURL('changelog.html');
 thanksa.target = "_blank";
 thanks.appendChild(thanksa);
 
 thanks.innerHTML += "<br>You also can play ";
 var thanksa = document.createElement('a');
 thanksa.innerText = "SAKUTRAIN";
-thanksa.href = chrome.extension.getURL('html/sakutrain/index.html');
+thanksa.href = chrome.runtime.getURL('html/sakutrain/index.html');
 thanksa.target = "_blank";
 thanks.appendChild(thanksa);
 thanks.innerHTML += " now!";
