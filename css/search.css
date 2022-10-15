@@ -28,3 +28,6 @@
     color: white;
     text-align: right;
 }
+.searchBoxes {
+    max-width: 100px;
+}

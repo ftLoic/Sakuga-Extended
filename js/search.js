@@ -4,10 +4,14 @@ div.style.display = "none";
 function select(name, id, options) {
     var dselect = document.createElement('div');
     var sort = document.createElement('select');
+    sort.classList.add('searchBoxes');
+
     let search = document.getElementById('tags').value;
     let reg = new RegExp(id+":([^ ]+) ?", "g");
     let detected = reg.exec(search);
+
     dselect.innerText = name;
+
     for (var i = 0;i < options.length; i ++) {
         var opt = document.createElement('option');
         opt.innerText = opt.value = options[i];
@@ -17,6 +21,7 @@ function select(name, id, options) {
         sort.appendChild(opt);
     }
     sort.onchange = function() {
+        search = document.getElementById('tags').value;
         search = search.replace(reg, "").trim();
         if (this.value != "date" && this.value != "all") {
             search += " "+id+":"+this.value+" ";
@@ -27,8 +32,69 @@ function select(name, id, options) {
     return dselect;
 }
 
-var dsort   = select("Sort by ", "order", ['date', 'id', 'id_desc', 'score', 'score_asc', 'mpixels', 'mpixels_asc']);
+function input(name, id, type) {
+    var dinput = document.createElement('div');
+    var input = document.createElement('input');
+    input.classList.add('searchBoxes');
+
+    let search = document.getElementById('tags').value;
+    let reg = new RegExp(id+":([^ ]+) ?", "g");
+
+    dinput.innerText = name;
+    input.type = type;
+
+    let detected = reg.exec(search);
+    if (detected) {
+        input.value = detected[1];
+    }
+
+    input.onchange = function() {
+        search = document.getElementById('tags').value;
+        search = search.replace(reg, "").trim();
+        if (this.value != 0) {
+            search += " "+id+":"+this.value+" ";
+        }
+        document.getElementById('tags').value = search;
+    }
+    dinput.appendChild(input);
+    return dinput;
+}
+
+function checkBox(name, id, value) {
+    var dcheck = document.createElement('div');
+    var check = document.createElement('input');
+
+    let search = document.getElementById('tags').value;
+    let reg = new RegExp(id+":([^ ]+) ?", "g");
+
+    dcheck.innerText = name;
+    check.type = 'checkbox';
+    check.textValue = value;
+
+    let detected = reg.exec(search);
+
+    if (detected && detected[1] == value) {
+        check.checked = true;
+    }
+
+    check.onchange = function() {
+        search = document.getElementById('tags').value;
+        search = search.replace(reg, "").trim();
+        if (this.checked) {
+            search += " "+id+":"+this.textValue;
+        }
+        document.getElementById('tags').value = search;
+    }
+    dcheck.appendChild(check);
+    return dcheck;
+}
+
+var dsort   = select("Sort by ", "order", ['date', 'source', 'id', 'id_desc', 'score', 'score_asc', 'mpixels', 'mpixels_asc', 'random']);
 var drating = select("Rating ", "rating", ['all', 'safe', 'questionable', 'explicit']);
+
+var dinput = input("Posts limit ", "limit", "number");
+
+var dsoloKA = checkBox("Solo KA ", "source", "*solo*ka");
 
 var launch = document.createElement('button');
 launch.innerText = "Search again";
@@ -38,6 +104,9 @@ launch.onclick = function() {
 // append all
 div.appendChild(dsort);
 div.appendChild(drating);
+div.appendChild(dinput);
+div.appendChild(dsoloKA);
+
 div.appendChild(launch);
 
 var btn = document.createElement('a');
