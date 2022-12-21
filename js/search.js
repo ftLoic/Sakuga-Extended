@@ -69,6 +69,7 @@ function checkBox(name, id, value) {
 
     dcheck.innerText = name;
     check.type = 'checkbox';
+    check.setAttribute('style', 'width: auto !important');
     check.textValue = value;
 
     let detected = reg.exec(search);
