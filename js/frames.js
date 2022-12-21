@@ -281,7 +281,7 @@ if (video) {
         frame = accurate_from_time(video.currentTime);
         show_frm();
 
-        if (id == "133675" && typeof(settings) != "undefined") {
+        if (id == "164035" && typeof(settings) != "undefined") {
             if (video.currentTime > 3.1 && video.currentTime < 4.4) {
                 settings.innerText = "Panda game!";
             } else {
