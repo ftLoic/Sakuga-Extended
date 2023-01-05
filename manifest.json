@@ -4,7 +4,7 @@
     "short_name": "Sakuga Extended",
     "description": "Enjoy a better experience with SAKUGABOORU! Previews on posts, frame control on videos...",
 
-    "version": "2.0.5",
+    "version": "2.0.6",
     "author": "ftLoic",
 
     "icons": {
@@ -23,54 +23,55 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://www.sakugabooru.com/*"],
+            "matches": ["*://www.sakugabooru.com/*", "*://sakugabooru.com/*"],
             "run_at": "document_idle",
             "js": ["js/redesign.js"]
         },
         {
-            "matches": ["https://www.sakugabooru.com/"],
+            "matches": ["*://www.sakugabooru.com/", "*://sakugabooru.com/"],
             "run_at": "document_idle",
             "css": ["css/index.css"],
             "js": ["js/index.js"]
         },
         {
-            "matches": ["https://www.sakugabooru.com/post", "https://www.sakugabooru.com/post?*", "https://www.sakugabooru.com/post/popular*", "https://www.sakugabooru.com/pool/show*", "https://www.sakugabooru.com/user/show/*"],
+            "matches": ["*://www.sakugabooru.com/post", "*://www.sakugabooru.com/post?*", "*://www.sakugabooru.com/post/popular*", "*://www.sakugabooru.com/pool/show*", "*://www.sakugabooru.com/user/show/*", "*://sakugabooru.com/post", "*://sakugabooru.com/post?*", "*://sakugabooru.com/post/popular*", "*://sakugabooru.com/pool/show*", "*://sakugabooru.com/user/show/*"],
             "run_at": "document_idle",
             "css": ["css/preview.css"],
             "js": ["js/preview.js"]
         },
         {
-            "matches": ["https://www.sakugabooru.com/post", "https://www.sakugabooru.com/post?*", "https://www.sakugabooru.com/post/popular*"],
+            "matches": ["*://www.sakugabooru.com/post", "*://www.sakugabooru.com/post?*", "*://www.sakugabooru.com/post/popular*", "*://sakugabooru.com/post", "*://sakugabooru.com/post?*", "*://sakugabooru.com/post/popular*"],
             "run_at": "document_end",
             "css": ["css/search.css"],
             "js": ["js/search.js", "js/fastaveragecolor.js"]
         },
         {
-            "matches": ["https://www.sakugabooru.com/post/show/*"],
+            "matches": ["*://www.sakugabooru.com/post/show/*", "*://sakugabooru.com/post/show/*"],
             "run_at": "document_idle",
             "css": ["css/post.css", "css/search.css"],
             "js": ["js/frames.js", "js/settings.js", "js/libgif.js", "js/search.js"]
         },
         {
-            "matches": ["https://www.sakugabooru.com/data/*"],
+            "matches": ["*://www.sakugabooru.com/data/*", "*://sakugabooru.com/data/*"],
             "run_at": "document_idle",
             "css": ["css/post.css"],
             "js": ["js/framesData.js", "js/libgif.js"]
         }
     ],
     "permissions": [
-        "storage", "scripting"
+        "storage",
+        "scripting"
     ],
     "host_permissions" : [
-        "https://www.sakugabooru.com/*"
+        "*://www.sakugabooru.com/*", "*://sakugabooru.com/*"
     ],
     "externally_connectable": {
-        "matches": ["https://www.sakugabooru.com/*"]
+        "matches": ["*://www.sakugabooru.com/*", "*://sakugabooru.com/*"]
     },
     "web_accessible_resources": [
         {
             "resources": ["changelog.html", "css/*", "html/*", "fonts/*", "js/framesScript.js"],
-            "matches" : ["https://www.sakugabooru.com/*"]
+            "matches" : ["*://www.sakugabooru.com/*", "*://sakugabooru.com/*"]
         }
     ]
 }

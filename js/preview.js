@@ -152,27 +152,17 @@ if (localStorage.tag_data) {
             });
         }
     });
-    var script = document.createElement('script');
-    script.defer = true;
-    script.innerHTML = `
-    jQuery.ajax({
-        url: "/tag/summary.json",
-        dataType: "json"
-    }).done((function(_this) {
-        return function(json) {
-            if (json.unchanged) {
-                _this.tag_data = localStorage.tag_data;
-            } else {
-                _this.tag_data = json.data;
-                localStorage.tag_data = _this.tag_data;
-                localStorage.tag_data_version = json.version;
-            }
+
+    // Sync the tag list
+    fetch("/tag/summary.json").then(res => {
+        res.json().then(data => {
+            localStorage.setItem("tag_data", data.data);
+            localStorage.setItem("tag_data_version", data.version);
             window.postMessage({type: "FROM_PAGE", text: "we_can_catch_the_tag"}, "*");
-        };
-    })(this));`;
-    document.body.append(script);
-    
+        });
+    });
 }
+
 function _onerror() {
     if (video.src.indexOf('.webm') === -1) {
         video.src = video.src.substr(0, video.src.length-4) + ".webm";
