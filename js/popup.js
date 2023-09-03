@@ -15,6 +15,26 @@ document.getElementById('score').onchange = document.getElementById('tags').onch
     chrome.storage.sync.set({optionalInfo: optionalInfo});
     reloadBooru();
 }
+document.getElementById('screenshot_key').onclick = function() {
+    document.addEventListener('keypress', function newScreenshotKey(event) {
+        var btnScreenshotKey = document.getElementById('screenshot_key')
+        var keyName = event.key.toUpperCase();
+        optionalInfo[btnScreenshotKey.id] = keyName;
+        btnScreenshotKey.value = keyName;
+        chrome.storage.sync.set({optionalInfo: optionalInfo});
+        reloadBooru();
+        document.removeEventListener('keypress', newScreenshotKey, false);
+    }, false);
+
+    // Version prompt
+    // var newKey = prompt("Enter new screenshot key");
+    // if (newKey) {
+    //     optionalInfo[this.id] = newKey;
+    //     this.value = newKey;
+    //     chrome.storage.sync.set({optionalInfo: optionalInfo});
+    //     reloadBooru();
+    // }
+}
 document.getElementById('theme').onchange = function() {
     chrome.storage.sync.set({theme: this.value}); 
     reloadBooru();
