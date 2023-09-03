@@ -23,7 +23,7 @@ td > a:not(.star-off) {
 .comment .author h6 a {
     color: var(--main-link)!important;
 }
-.comment .body a {
+.comment .body a:not(.select-image) {
     color: var(--main-link)!important;
 }
 li.tag-type-artist a:link, li.tag-type-artist a:visited {color: var(--tag-artist)!important;}
@@ -144,7 +144,7 @@ input[type="text"] {
     border-radius: 5px;
     padding: 3px 6px;
 }
-input[type="submit"], button:not(.vjs-button):not(.vjs-control) {
+input[type="submit"], button:not(.vjs-button):not(.vjs-control), a.select-image {
     background-color: var(--main-color)!important;
     color: white!important;
     border: none!important;

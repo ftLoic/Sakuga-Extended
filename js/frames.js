@@ -55,10 +55,10 @@ function loadFrames() {
         if (i > 0 && testComment.querySelector('blockquote')) { // Don't read quotes if it's not the first comment
             testComment.querySelector('blockquote').remove();
         }
-        console.log(testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, ""));
+        // console.log(testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, ""));
         var matches = (testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, "")+"\n").matchAll(exp);
         for (var match of matches) {
-            console.log(match);
+            // console.log(match);
             var artist = toTitleCase(match[8].trim().replace(/[_]/g, " "));
             if (artist.length > 0 && artist.length < 27) {
                 if (match[6] != undefined || match[9] != undefined) {
@@ -178,7 +178,10 @@ if (video || isGif) {
 
         gif_control.appendChild(play_gif);
         gif_control.appendChild(slider);
-        document.querySelector('.content').insertBefore(gif_control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
+
+        if (document.querySelector('.content')) {
+            document.querySelector('.content').insertBefore(gif_control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
+        }
     }
 
     control = document.createElement('div'),
@@ -203,7 +206,10 @@ if (video || isGif) {
             control.appendChild(btn);
         }
     }
-    document.querySelector('.content').insertBefore(control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
+
+    if (document.querySelector('.content')) {
+        document.querySelector('.content').insertBefore(control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
+    }
 }
 if (video) {
     function show_frm() {
@@ -313,6 +319,10 @@ if (video) {
             }
         }
     }
+    // Reload picture events
+    var script = document.createElement('script');
+    script.src = chrome.runtime.getURL('js/pictureEvents.js');
+    (document.head || document.documentElement).appendChild(script);
 }
 
 if (isGif) { // Gif

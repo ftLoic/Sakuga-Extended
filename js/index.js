@@ -11,7 +11,6 @@ var div2 = document.createElement('div');
 div2.id = "sakuga-extended";
 
 chrome.storage.sync.get(['optionalInfo'], function(data) {
-    console.log(data.optionalInfo);
     if (data.optionalInfo == undefined || data.optionalInfo.recommendations != false) {
         if (tags.length > 0) {
             var dt = document.createElement('p');
