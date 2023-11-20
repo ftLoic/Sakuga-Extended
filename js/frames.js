@@ -47,7 +47,7 @@ function loadFrames() {
     artistFrames = [];
     artistPartsConfirmed = 0;
 
-    var exp = /([0-9]*:[0-9]{2}|start)s?[ ]*(-|–|~|〜|to)[ ]*([0-9]*:[0-9]{2}|end)s?[ ]*(\(.*\))?[ ]*(:| :| )[ ]*(should be|might be|maybe|may be|could be|looks? like|can be|looks)?(is also|is confirmed|also is|is |by |-)?[ ]*([A-Za-z0-9-_ ]{1,27})(.*presume.*|.*\?.*)?(\.|$|\n|\()/gi;
+    var exp = /([0-9]*:[0-9]{2}([.,][0-9])?|start)s?[ ]*(-|–|~|〜|to)[ ]*([0-9]*:[0-9]{2}([.,][0-9])?|end)s?[ ]*(\(.*\))?[ ]*(:| :| )[ ]*(should be|might be|maybe|may be|could be|looks? like|can be|looks)?(is also|is confirmed|also is|is |by |-)?[ ]*([A-Za-z0-9-_ ]{1,27})(.*presume.*|.*\?.*)?(\.|$|\n|\()/gi;
     var comments = document.querySelectorAll('div.comment');
 
     for (var i = 0; i < comments.length; i ++) {
@@ -58,16 +58,16 @@ function loadFrames() {
         // console.log(testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, ""));
         var matches = (testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, "")+"\n").matchAll(exp);
         for (var match of matches) {
-            // console.log(match);
-            var artist = toTitleCase(match[8].trim().replace(/[_]/g, " "));
+            console.log(match);
+            var artist = toTitleCase(match[10].trim().replace(/[_]/g, " "));
             if (artist.length > 0 && artist.length < 27) {
-                if (match[6] != undefined || match[9] != undefined) {
+                if (match[8] != undefined || match[11] != undefined) {
                     artist += " (?)";
                 }
                 if (match[1].toLowerCase() == "start") match[1] = "00:00";
-                if (match[3].toLowerCase() == "end") match[3] = "10:00";
+                if (match[4].toLowerCase() == "end") match[4] = "10:00";
                 var partsStart = match[1].split(":");
-                var partsEnd = match[3].split(":");
+                var partsEnd = match[4].split(":");
                 var frameStart = parseFloat(partsStart[0])*60+parseFloat(partsStart[1]);
                 var frameEnd = parseFloat(partsEnd[0])*60+parseFloat(partsEnd[1]);
                 artistFrames.push([frameStart, frameEnd, artist]);
@@ -82,7 +82,7 @@ function loadFrames() {
 function updateText() {
     var artist = "";
     for (var i = 0; i < artistFrames.length; i ++) {
-        if (video.currentTime >= artistFrames[i][0] && video.currentTime-1 <= artistFrames[i][1]) {
+        if (video.currentTime >= artistFrames[i][0] && video.currentTime <= artistFrames[i][1]) {
             artist = artistFrames[i][2];
         }
     }
@@ -178,10 +178,6 @@ if (video || isGif) {
 
         gif_control.appendChild(play_gif);
         gif_control.appendChild(slider);
-
-        if (document.querySelector('.content')) {
-            document.querySelector('.content').insertBefore(gif_control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
-        }
     }
 
     control = document.createElement('div'),
@@ -296,7 +292,7 @@ if (video) {
         }
     }
     var comments = document.querySelectorAll('div.comment');
-    var exp = /([0-9]+:[0-9.]+)/g;
+    var exp = /([0-9]+:[0-9]+([.,][0-9])?)/g;
     for (var i = 0; i < comments.length; i ++) {
         if (comments[i].innerText.match(exp)) {
             comments[i].querySelector('.body').innerHTML = comments[i].querySelector('.body').innerHTML.replaceAll(exp, '<span class="timecode">$1</span>');
@@ -305,7 +301,7 @@ if (video) {
     // Load timecodes
     var timecodes = document.querySelectorAll('.timecode');
     for (var i = 0; i < timecodes.length; i ++) {
-        let m = timecodes[i].innerText.split(":");
+        let m = timecodes[i].innerText.replace(/,/g, ".").split(":");
         let s = parseFloat(m[0])*60+parseFloat(m[1]);
         if (s < 0 || s > video.duration) {
             timecodes[i].classList.remove('timecode');
