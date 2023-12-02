@@ -10,16 +10,12 @@ var id,
     frames = frame = 0,
     frames_html5 = 1/40,
     frames_arr = [],
-    video = document.querySelector('video'),
-    img = document.querySelector('.content img'),
-    isGif = (img && /.gif$/.test(img.src) && !/Firefox\//.test(navigator.userAgent)), // Not supported
-    gif, seek, control, text_frm, slider, play_gif, artistPartsConfirmed = 0, artistFrames;
-try {
-    id = /show\/([0-9]+)/.exec(location.href)[1];
-} catch {}
-    
+    video, gif, img, isGif,
+    gifManager, seek, seeking, refreshFrameInfo, slider, gifButton,
+    artistPartsConfirmed = 0, artistFrames;
+
 // From Sakuga Encode
-function accurate_from_frame(n) {
+function timeFromFrame(n) {
     var ct = 0, f;
     for (var i = 0; i < n; i++) {
         f = frames_arr[i % frames_arr.length];
@@ -27,7 +23,7 @@ function accurate_from_frame(n) {
     }
     return parseFloat((ct).toFixed(3));
 }
-function accurate_from_time(v) {
+function frameFromTime(v) {
     var ct = 0;
     for (var i = 0; i < Math.ceil(video.duration * (frames_arr.length+1)); i++) {
         f = frames_arr[i % frames_arr.length];
@@ -38,16 +34,212 @@ function accurate_from_time(v) {
     }
     return i;
 }
-function toTitleCase(toTransform) {
-    return toTransform.replace(/\b([a-z])/g, function (_, initial) {
-        return initial.toUpperCase();
-    });
+function timestampFromSeconds(seconds) {
+    if (isNaN(seconds)) {
+        return "0:00";
+    }
+
+    seconds = parseFloat(seconds).toFixed(1);
+    let minutes = Math.floor(seconds / 60);
+    seconds = parseFloat((seconds % 60).toFixed(1));
+
+    minutes = String(minutes).padStart(1, "0");
+    if (Number.isInteger(seconds)) {
+        seconds = String(seconds).padStart(2, "0");
+    } else {
+        seconds = String(seconds).padStart(4, "0");
+    }
+    return minutes + ":" + seconds;
 }
-function loadFrames() {
+function updateArtist() {
+    if (artistPartsConfirmed < 1) return;
+
+    function updateText() {
+        var artist = "";
+        const currentTime = parseFloat(video.currentTime.toFixed(1));
+        for (var i = 0; i < artistFrames.length; i ++) {
+            if (currentTime >= artistFrames[i][0] && currentTime <= artistFrames[i][1]) {
+                artist = artistFrames[i][2];
+            }
+        }
+    
+        var text = "Current artist: "+artist;
+        if (artist != "") {
+            if (document.getElementById('current-artist').innerText != text) {
+                document.getElementById('current-artist').innerText = "Current artist: "+artist;
+            }
+        } else {
+            document.getElementById('current-artist').innerText = "";
+        }
+    }
+
+    if (document.getElementById('current-artist')) {
+        updateText();
+    } else {
+        setTimeout(updateText, 50);
+    }
+}
+function readShortcuts(e) {
+    if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+        if ((!e.ctrlKey && (e.key == "D" || e.key == "d")) || e.key == "," || e.key == "?" || e.key == "<") {
+            seek(-1 - e.altKey - e.shiftKey);
+        }
+        if ((!e.ctrlKey && (e.key == "F" || e.key == "f")) || e.key == "." || e.key == ";" || e.key == ">") {
+            seek(1 + e.altKey + e.shiftKey);
+        }
+        if (!e.ctrlKey && e.key == "-") {
+            document.getElementById('flip').click();
+        }
+        if (document.activeElement.tagName !== "VIDEO") {
+            if (e.key == "ArrowLeft") {
+                seek(-1 - e.altKey - e.shiftKey);
+            }
+            if (e.key == "ArrowRight") {
+                seek(1 + e.altKey + e.shiftKey);
+            }
+        }
+    }
+}
+function buildControls() {
+    let el;
+    if (video) {
+        el = video;
+    } else {
+        el = gif;
+    }
+
+    const frameControl = document.createElement('div');
+    frameControl.style.width = (el.width != 0) ? el.width+'px' : el.offsetWidth+'px';
+    frameControl.classList.add('frame-control');
+
+    const frameInfo = document.createElement('div');
+    frameInfo.classList.add('frame-info');
+
+    const frameInfoTop = document.createElement('div');
+    const frameInfoBottom = document.createElement('div');
+    frameInfoBottom.style.marginTop = '1px';
+
+    const currentFrame = document.createElement('input');
+    currentFrame.id = 'current-frame';
+    currentFrame.type = 'number';
+    currentFrame.dir = 'rtl';
+    currentFrame.min = 0;
+    currentFrame.max = 9999;
+    currentFrame.step = 1;
+    currentFrame.style.width = '70px';
+    currentFrame.classList.add('input-number');
+    currentFrame.onchange = function (e) {
+        seek(parseInt(e.target.value) - frame);
+    }
+
+    const totalFrame = document.createElement('label');
+    totalFrame.id = 'total-frame';
+    
+    const currentTimestamp = document.createElement('input');
+    currentTimestamp.id = 'current-timestamp';
+    currentTimestamp.type = 'text';
+    currentTimestamp.readOnly = true;
+    currentTimestamp.style.width = '70px';
+    currentTimestamp.classList.add('input-number');
+    currentTimestamp.onclick = function () {
+        this.select();
+    }
+
+    const totalTimestamp = document.createElement('label');
+    totalTimestamp.id = 'total-timestamp';
+    
+    const arrows = ['<<<', '<<', '<', null, '>', '>>', '>>>'];
+    for (let i = 0; i < arrows.length; i ++) {
+        if (arrows[i] == null) {
+            frameInfoTop.appendChild(currentFrame);
+            frameInfoTop.appendChild(totalFrame);
+
+            if (video) {
+                frameInfoBottom.appendChild(currentTimestamp);
+                frameInfoBottom.appendChild(totalTimestamp);
+            }
+
+            frameInfo.appendChild(frameInfoTop);
+            frameInfo.appendChild(frameInfoBottom);
+            
+            frameControl.appendChild(frameInfo);
+        } else {
+            let btn = document.createElement('button');
+            btn.innerText = arrows[i];
+            btn.classList.add('frame-button');
+            btn.onclick = function() {
+                seek(i-3);
+            }
+            frameControl.appendChild(btn);
+        }
+    }
+
+    // Insert controllers above video
+    const videoContainer = document.querySelector('.content div:not([id]):first-of-type');
+    const deletedVideoContainer = document.getElementById('deleted-video');
+    if (deletedVideoContainer) {
+        deletedVideoContainer.appendChild(frameControl);
+    } else if (videoContainer) {
+        videoContainer.parentNode.insertBefore(frameControl, videoContainer.nextSibling);
+    }
+    
+    if (gif) {
+        const gifControl = document.createElement('div');
+        gifControl.style.width = (gif.width != 0) ? gif.width+'px' : gif.offsetWidth+'px';
+        gifControl.style.display = "flex";
+        gifControl.classList.add('frame-control');
+        
+        gifButton = document.createElement('button');
+        gifButton.innerText = " || ";
+
+        slider = document.createElement('input');
+        slider.type = "range";
+        slider.min = slider.max = "0";
+        slider.style.flex = "1";
+
+        gifControl.appendChild(gifButton);
+        gifControl.appendChild(slider);
+        
+        videoContainer.parentNode.insertBefore(gifControl, frameControl);
+    }
+}
+function buildCommentModifiers() {
+    const comments = document.querySelectorAll('div.comment');
+    const exp = /([0-9]+:[0-9]+([.,][0-9])?)/g;
+    for (let i = 0; i < comments.length; i ++) {
+        if (comments[i].innerText.match(exp)) {
+            comments[i].querySelector('.body').innerHTML = comments[i].querySelector('.body').innerHTML.replaceAll(exp, '<span class="timecode">$1</span>');
+        }
+    }
+
+    // Load timecodes
+    const timecodes = document.querySelectorAll('.timecode');
+    for (let i = 0; i < timecodes.length; i ++) {
+        let m = timecodes[i].innerText.replace(/,/g, ".").split(":");
+        let s = parseFloat(m[0])*60+parseFloat(m[1]);
+        if (s < 0 || s > video.duration) {
+            timecodes[i].classList.remove('timecode');
+        } else {
+            timecodes[i].onclick = function() {
+                video.currentTime = s;
+                if (window.scrollY > document.getElementById('right-col').offsetTop+video.height/2) {
+                    location.href = "#";
+                    location.href = "#right-col";
+                }
+            }
+        }
+    }
+
+    // Reload picture events
+    var script = document.createElement('script');
+    script.src = chrome.runtime.getURL('js/pictureEvents.js');
+    (document.head || document.documentElement).appendChild(script);
+}
+function loadTimestamps() {
     artistFrames = [];
     artistPartsConfirmed = 0;
 
-    var exp = /([0-9]*:[0-9]{2}([.,][0-9])?|start)s?[ ]*(-|–|~|〜|to)[ ]*([0-9]*:[0-9]{2}([.,][0-9])?|end)s?[ ]*(\(.*\))?[ ]*(:| :| )[ ]*(should be|might be|maybe|may be|could be|looks? like|can be|looks)?(is also|is confirmed|also is|is |by |-)?[ ]*([A-Za-z0-9-_ ]{1,27})(.*presume.*|.*\?.*)?(\.|$|\n|\()/gi;
+    var exp = /([0-9]*:[0-9]{2}([.,][0-9])?|start)s?[ ]*(-|–|~|〜|to)[ ]*([0-9]*:[0-9]{2}([.,][0-9])?|end)s?[ ]*(\(.*\))?[ ]*(:| :| )[ ]*(should be|might be|maybe|may be|could be|looks? like|can be|looks)?(is also|is confirmed|also is|is |by |-)?[ ]*([a-zA-Z0-9+-_ \u00C0-\u024F\u1E00-\u1EFF]{1,30})(.*presume.*|.*\?.*)?(\.|$|\n|\()/gi;
     var comments = document.querySelectorAll('div.comment');
 
     for (var i = 0; i < comments.length; i ++) {
@@ -55,11 +247,11 @@ function loadFrames() {
         if (i > 0 && testComment.querySelector('blockquote')) { // Don't read quotes if it's not the first comment
             testComment.querySelector('blockquote').remove();
         }
-        // console.log(testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, ""));
-        var matches = (testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, "")+"\n").matchAll(exp);
+        // console.log(testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, "\n"));
+        var matches = (testComment.querySelector('.body').innerHTML.replace(/<br>/g, "\n").replace(/<[^\>]+>/g, "\n")+"\n").matchAll(exp);
         for (var match of matches) {
-            console.log(match);
-            var artist = toTitleCase(match[10].trim().replace(/[_]/g, " "));
+            // console.log(match);
+            var artist = match[10].trim().replace(/[_]/g, " ");
             if (artist.length > 0 && artist.length < 27) {
                 if (match[8] != undefined || match[11] != undefined) {
                     artist += " (?)";
@@ -75,37 +267,199 @@ function loadFrames() {
             }
         }
     }
-    console.log(artistFrames);
-    if (artistPartsConfirmed == 0) artistPartsConfirmed = -1;
+    // console.log(artistFrames);
+
     updateArtist();
 }
-function updateText() {
-    var artist = "";
-    for (var i = 0; i < artistFrames.length; i ++) {
-        if (video.currentTime >= artistFrames[i][0] && video.currentTime <= artistFrames[i][1]) {
-            artist = artistFrames[i][2];
+function loadVideoEvents() {
+    // Video first loading
+    video.onloadedmetadata = function() {
+        if (framerate == 30) {
+            frames_arr = [0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033]
+            frames_html5 = 1/50;
+        } else {
+            frames_arr = [0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042];
+            frames_html5 = 1/40;
         }
-    }
 
-    var text = "Current artist: "+artist;
-    if (artist != "") {
-        if (document.getElementById('currentArtist').innerText != text) {
-            document.getElementById('currentArtist').innerText = "Current artist: "+artist;
+        frame = frameFromTime(video.currentTime);
+        frames = frameFromTime(video.duration);
+        if (document.getElementById('current-frame')) {
+            document.getElementById('current-frame').max = frames;
         }
-    } else {
-        document.getElementById('currentArtist').innerText = "";
+
+        refreshFrameInfo();
+    }
+    // Init video anyway before the first loading event
+    video.onloadedmetadata();
+
+    video.onplay = function() {
+        seeking = -1;
+    }
+    // Refresh frames
+    video.ontimeupdate = function() {
+        if (seeking == video.currentTime) {
+            return;
+        }
+
+        frame = frameFromTime(video.currentTime);
+        refreshFrameInfo();
+
+        // Panda game
+        if (id == "164035" && typeof(settings) != "undefined") {
+            if (video.currentTime > 3.1 && video.currentTime < 4.4) {
+                settings.innerText = "Panda game!";
+            } else {
+                settings.innerText = "Settings";
+            }
+        }
     }
 }
-function updateArtist() {
-    if (artistPartsConfirmed == -1) return;
-    if (document.querySelectorAll('.tag-type-artist') && document.querySelectorAll('.tag-type-artist').length == 1) {
-        artistPartsConfirmed = -1;
-        return;
+
+function initFrameScript() {
+    video = document.querySelector('#right-col video');
+    gif = document.querySelector('#right-col img[src$=".gif"]');
+    img = document.querySelector('#right-col img:not([src$=".gif"])');
+    isGif = (gif && !/Firefox\//.test(navigator.userAgent)); // Not supported on Firefox
+
+    try {
+        id = /show\/([0-9]+)/.exec(location.href)[1];
+    } catch {
+        console.log("Could not get post ID");
+    }
+
+    if (video || isGif) {
+        // Shortcuts
+        document.onkeydown = readShortcuts;
+    
+        buildControls();
     }
     
-    if (artistPartsConfirmed > 0) {
-        if (document.getElementById('currentArtist')) updateText();
-        else setTimeout(updateText, 50);
+    if (video) {
+        // Use default player
+        if (video.classList.contains('video-js') || video.classList.contains('vjs-tech')) {
+            chrome.storage.sync.get(['optionalInfo'], function(data) {
+                if (data.optionalInfo != undefined && data.optionalInfo.default_player == true) {
+                    var messageListener = function (e) {
+                        if (e.data == "VIDEO_RESET") {
+                            video = document.querySelector('#right-col video');
+                            loadVideoEvents();
+                        }
+                        window.removeEventListener('message', messageListener);
+                    }
+                    window.addEventListener('message', messageListener);
+    
+                    // Kill videojs
+                    var script = document.createElement('script');
+                    script.src = chrome.runtime.getURL('js/resetVideo.js');
+                    (document.head || document.documentElement).appendChild(script);
+                }
+            });
+        }
+
+        // Frame seeker
+        seeking = video.currentTime;
+        refreshFrameInfo = function () {
+            updateArtist();
+        
+            if (!document.getElementById('current-frame')) {
+                return;
+            }
+        
+            // Frame labels
+            if (document.activeElement != document.getElementById('current-frame')) {
+                document.getElementById('current-frame').value = frame;
+            }
+            document.getElementById('total-frame').innerText = frames;
+            
+            // Timestamp labels
+            if (document.activeElement != document.getElementById('current-timestamp')) {
+                document.getElementById('current-timestamp').value = timestampFromSeconds(document.querySelector('video').currentTime);
+            }
+            document.getElementById('total-timestamp').innerText = timestampFromSeconds(document.querySelector('video').duration);
+        }
+        seek = function (n) {
+            if (seeking == video.currentTime) {
+                frame += n;
+            } else {
+                frame = frameFromTime(video.currentTime)+n;
+            }
+            video.pause();
+            frame = Math.max(0, Math.min(frames, frame)); // Limit 0 and max frame
+            var frameTime = timeFromFrame(frame);
+            video.currentTime = frameTime+frames_html5; // HTML5 players are dumb, we have to move a little forward
+            
+            refreshFrameInfo();
+            seeking = video.currentTime;
+        }
+    
+        loadVideoEvents();
+        loadTimestamps();
+        buildCommentModifiers();
+    }
+    
+    if (isGif) {
+        window.onload = function() {
+            gifManager = new SuperGif({gif: gif});
+            gifManager.load(function() {
+                seek = function(i) {
+                    frame = frame + i;
+                    if (frame < 0) frame = 0;
+                    if (frame > frames) frame = frames;
+                    seek_frm();
+                }
+                function refreshFrameInfo() {
+                    if (!document.getElementById('current-frame')) {
+                        return;
+                    }
+                
+                    // Frame labels
+                    if (document.activeElement != document.getElementById('current-frame')) {
+                        document.getElementById('current-frame').value = frame;
+                    }
+                    document.getElementById('total-frame').innerText = frames;
+                    
+                    slider.value = frame;
+                }
+                function seek_frm() {
+                    gifButton.innerText = "►";
+                    gifManager.pause();
+                    frame %= frames+1;
+                    gifManager.move_to(frame);
+                    refreshFrameInfo();
+                }
+                slider.oninput = function() {
+                    gifManager.pause();
+                    frame = slider.value;
+                    gifManager.move_to(frame);
+                    refreshFrameInfo();
+                }
+                
+                frames = gifManager.get_length()-1;
+                slider.max = frames;
+                refreshFrameInfo();
+                
+                gifManager.get_canvas().onclick = gifButton.onclick = function() {
+                    if (gifManager.get_playing()) {
+                        gifButton.innerText = "►";
+                        gifManager.pause();
+                    } else {
+                        gifButton.innerText = " || ";
+                        gifManager.play();
+                    }
+                }
+                gifManager.get_canvas().onwheel = function(e) {
+                    if (e.shiftKey) {
+                        if (e.deltaY > 0) seek(1);
+                        if (e.deltaY < 0) seek(-1);
+                    }
+                }
+                setInterval(function() {
+                    frame = gifManager.get_current_frame();
+                    refreshFrameInfo();
+                }, 250);
+            });
+        }
     }
 }
 
@@ -114,7 +468,7 @@ var script = document.createElement('script');
 script.src = chrome.runtime.getURL('js/framesScript.js');
 (document.head || document.documentElement).appendChild(script);
 
-// Show anyway
+// Deleted video: "Show anyway" feature
 if (document.querySelector('.status-notice') && !video) {
     var hash = /MD5: ([a-z0-9]{32})/g.exec(document.querySelector('.status-notice').innerText);
     if (hash) {
@@ -145,9 +499,10 @@ if (document.querySelector('.status-notice') && !video) {
                 video.src = video.src.replace(".mp4", ".webm");
             }
         }
-        var loaded = false;
+        let loaded = false;
         video.onloadeddata = function() {
             if (loaded) return;
+
             loaded = true;
             document.querySelector('.status-notice').append(" (");
             document.querySelector('.status-notice').append(a);
@@ -158,230 +513,4 @@ if (document.querySelector('.status-notice') && !video) {
     }
 }
 
-if (video || isGif) {
-    var el = video;
-
-    if (isGif) {
-        el = img;
-
-        var gif_control = document.createElement('div');
-        gif_control.style.width = (el.width != 0) ? el.width+'px' : el.offsetWidth+'px';
-        gif_control.style.display = "flex";
-        gif_control.classList.add('control');
-        
-        play_gif = document.createElement('button');
-        play_gif.innerText = " || ";
-        slider = document.createElement('input');
-        slider.type = "range";
-        slider.min = slider.max = "0";
-        slider.style.flex = "1";
-
-        gif_control.appendChild(play_gif);
-        gif_control.appendChild(slider);
-    }
-
-    control = document.createElement('div'),
-    text_frm = document.createElement('label');
-
-    control.style.width = (el.width != 0) ? el.width+'px' : el.offsetWidth+'px';
-    control.classList.add('control');
-    text_frm.style.display = 'inline-block';
-    text_frm.style.textAlign = 'center';
-    text_frm.style.width = '120px';
-    
-    let arrows = ['<<<', '<<', '<', null, '>', '>>', '>>>'];
-    for (let i = 0; i < arrows.length; i ++) {
-        if (arrows[i] == null) {
-            control.appendChild(text_frm);
-        } else {
-            let btn = document.createElement('button');
-            btn.innerText = arrows[i];
-            btn.onclick = function() {
-                seek(i-3);
-            }
-            control.appendChild(btn);
-        }
-    }
-
-    if (document.querySelector('.content')) {
-        document.querySelector('.content').insertBefore(control, document.querySelector('.content div[style="margin-bottom: 1em;"]'));
-    }
-}
-if (video) {
-    function show_frm() {
-        text_frm.innerText = frame+" / "+frames;
-        updateArtist();
-    }
-    // Frame seeker
-    var frame = 0, seeking = video.currentTime;
-    seek = function(n) {
-        if (seeking == video.currentTime) {
-            frame += n;
-        } else {
-            frame = accurate_from_time(video.currentTime)+n;
-        }
-        video.pause();
-        frame = Math.max(0, Math.min(frames, frame)); // Limit 0 and max frame
-        var frameTime = accurate_from_frame(frame);
-        video.currentTime = frameTime+frames_html5; // HTML5 players are dumb, we have to move a little forward
-        
-        show_frm();
-        seeking = video.currentTime;
-    }
-    // Shortcuts
-    document.onkeydown = function(e) {
-        if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-            if ((!e.ctrlKey && (e.key == "D" || e.key == "d")) || e.key == "," || e.key == "?" || e.key == "<") seek(-1);
-            if ((!e.ctrlKey && (e.key == "F" || e.key == "f")) || e.key == "." || e.key == ";" || e.key == ">") seek(1);
-            if (!e.ctrlKey && e.key == "-") document.getElementById('flip').click();
-            if (document.activeElement.tagName !== "VIDEO") {
-                if (e.key == "ArrowLeft") seek(-1);
-                if (e.key == "ArrowRight") seek(1);
-            }
-        }
-    }
-
-
-    chrome.storage.sync.get(['optionalInfo'], function(data) {
-        if (data.optionalInfo != undefined && data.optionalInfo.default_player == true) {
-            video.controls = true;
-            if (document.querySelector('.vjs-control-bar')) document.querySelector('.vjs-control-bar').style.display = "none";
-            if (document.querySelector('.vjs-text-track-display')) document.querySelector('.vjs-text-track-display').style.display = "none";
-            if (document.querySelector('.vjs-big-play-button')) document.querySelector('.vjs-big-play-button').style.display = "none";
-            video.autoplay = true;
-            video.onclick = function() {
-                if (video.paused) video.play();
-                else video.pause();
-            }
-        }
-    });
-
-
-    // Video first loading
-    video.onloadedmetadata = function() {
-        if (framerate == 30) {
-            frames_arr = [0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.033, 0.034, 0.033, 0.034, 0.033]
-            frames_html5 = 1/50;
-        } else {
-            frames_arr = [0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042];
-            frames_html5 = 1/40;
-        }
-        frame = accurate_from_time(video.currentTime);
-        frames = accurate_from_time(video.duration);
-        show_frm();
-        loadFrames();
-    }
-    video.onloadedmetadata();
-
-    video.onplay = function() {
-        seeking = -1;
-    }
-    video.ontimeupdate = function() {
-        if (seeking == video.currentTime) {
-            return;
-        }
-        frame = accurate_from_time(video.currentTime);
-        show_frm();
-
-        if (id == "164035" && typeof(settings) != "undefined") {
-            if (video.currentTime > 3.1 && video.currentTime < 4.4) {
-                settings.innerText = "Panda game!";
-            } else {
-                settings.innerText = "Settings";
-            }
-        }
-    }
-    var comments = document.querySelectorAll('div.comment');
-    var exp = /([0-9]+:[0-9]+([.,][0-9])?)/g;
-    for (var i = 0; i < comments.length; i ++) {
-        if (comments[i].innerText.match(exp)) {
-            comments[i].querySelector('.body').innerHTML = comments[i].querySelector('.body').innerHTML.replaceAll(exp, '<span class="timecode">$1</span>');
-        }
-    }
-    // Load timecodes
-    var timecodes = document.querySelectorAll('.timecode');
-    for (var i = 0; i < timecodes.length; i ++) {
-        let m = timecodes[i].innerText.replace(/,/g, ".").split(":");
-        let s = parseFloat(m[0])*60+parseFloat(m[1]);
-        if (s < 0 || s > video.duration) {
-            timecodes[i].classList.remove('timecode');
-        } else {
-            timecodes[i].onclick = function() {
-                video.currentTime = s;
-                if (window.scrollY > document.getElementById('right-col').offsetTop+video.height/2) {
-                    location.href = "#";
-                    location.href = "#right-col";
-                }
-            }
-        }
-    }
-    // Reload picture events
-    var script = document.createElement('script');
-    script.src = chrome.runtime.getURL('js/pictureEvents.js');
-    (document.head || document.documentElement).appendChild(script);
-}
-
-if (isGif) { // Gif
-    window.onload = function() {
-        img.src = img.src.replace('://sakugabooru.com', '://www.sakugabooru.com');
-        gif = new SuperGif({gif: img});
-        gif.load(function() {
-            seek = function(i) {
-                frame = frame + i;
-                if (frame < 0) frame = 0;
-                if (frame > frames) frame = frames;
-                seek_frm();
-            }
-            function show_frm() {
-                text_frm.innerText = frame+" / "+frames;
-                slider.value = frame;
-            }
-            function seek_frm() {
-                play_gif.innerText = "►";
-                gif.pause();
-                frame %= frames+1;
-                gif.move_to(frame);
-                show_frm();
-            }
-            slider.oninput = function() {
-                gif.pause();
-                frame = slider.value;
-                gif.move_to(frame);
-                show_frm();
-            }
-            
-            frames = gif.get_length()-1;
-            slider.max = frames;
-            show_frm();
-            
-            gif.get_canvas().onclick = play_gif.onclick = function() {
-                if (gif.get_playing()) {
-                    play_gif.innerText = "►";
-                    gif.pause();
-                } else {
-                    play_gif.innerText = " || ";
-                    gif.play();
-                }
-            }
-            gif.get_canvas().onwheel = function(e) {
-                if (e.shiftKey) {
-                    if (e.deltaY > 0) seek(1);
-                    if (e.deltaY < 0) seek(-1);
-                }
-            }
-            setInterval(function() {
-                frame = gif.get_current_frame();
-                show_frm();
-            }, 250);
-            document.onkeydown = function(e) {
-                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-                    var key = (e || window.event).key;
-                    if (key == "D" || key == "d" || key == "," || key == "?" || key == "<" || key == "ArrowLeft") seek(-1);
-                    if (key == "F" || key == "f" || key == "." || key == ";" || key == ">" || key == "ArrowRight") seek(1);
-                    if (!e.ctrlKey && e.key == "-") document.getElementById('flip').click();
-                    if (key == " ") play_gif.onclick();
-                }
-            };
-        });
-    }
-}
+initFrameScript();

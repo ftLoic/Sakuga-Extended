@@ -20,13 +20,16 @@ try {
         res.json().then(posts => {
             if (posts && posts.length == 1) {
                 booruLink.href = "https://www.sakugabooru.com/post/show/" + posts[0].id;
+                booruLink.innerText = "Link to the post";
+                booruLink.classList.add('link');
+                booruLink.id = 'booruLink';
             }
         });
     });
 } catch {}
 
 // From Sakuga Encode
-function accurate_from_frame(n) {
+function timeFromFrame(n) {
     var ct = 0, f;
     for (var i = 0; i < n; i++) {
         f = frames_arr[i % frames_arr.length];
@@ -34,7 +37,7 @@ function accurate_from_frame(n) {
     }
     return parseFloat((ct).toFixed(3));
 }
-function accurate_from_time(v) {
+function frameFromTime(v) {
     var ct = 0;
     for (var i = 0; i < Math.ceil(video.duration * (frames_arr.length+1)); i++) {
         f = frames_arr[i % frames_arr.length];
@@ -55,7 +58,7 @@ if (video || isGif) {
         var gif_control = document.createElement('div');
         gif_control.style.width = (el.width != 0) ? el.width+'px' : el.offsetWidth+'px';
         gif_control.style.display = "flex";
-        gif_control.classList.add('control');
+        gif_control.classList.add('frame-control');
 
         play_gif = document.createElement('button');
         play_gif.innerText = " || ";
@@ -71,7 +74,7 @@ if (video || isGif) {
     }
 
     control = document.createElement('div'),
-    control.classList.add('control');
+    control.classList.add('frame-control');
     control.id = 'controls';
     text_frm = document.createElement('label');
 
@@ -103,15 +106,7 @@ if (video || isGif) {
         }
     }
 
-    //br to separate control and booru link
-    var breakLine = document.createElement('br');
-    control.appendChild(breakLine);
-
-    //Link to the booru post
-    var booruLinkText = document.createTextNode("Link to the post");
-    booruLink.appendChild(booruLinkText); 
-    booruLink.classList.add('link');
-    booruLink.id = 'booruLink';
+    // Link to the booru post
     control.appendChild(booruLink); 
 
     document.querySelector('body').appendChild(control);
@@ -127,11 +122,11 @@ if (video) {
         if (seeking == video.currentTime) {
             frame += n;
         } else {
-            frame = accurate_from_time(video.currentTime)+n;
+            frame = frameFromTime(video.currentTime)+n;
         }
         video.pause();
         frame = Math.max(0, Math.min(frames, frame)); // Limit 0 and max frame
-        var frameTime = accurate_from_frame(frame);
+        var frameTime = timeFromFrame(frame);
         video.currentTime = frameTime+frames_html5; // HTML5 players are dumb, we have to move a little forward
 
         show_frm();
@@ -149,22 +144,6 @@ if (video) {
         }
     }
 
-
-    chrome.storage.sync.get(['optionalInfo'], function(data) {
-        if (data.optionalInfo != undefined && data.optionalInfo.default_player == true) {
-            video.controls = true;
-            if (document.querySelector('.vjs-control-bar')) document.querySelector('.vjs-control-bar').style.display = "none";
-            if (document.querySelector('.vjs-text-track-display')) document.querySelector('.vjs-text-track-display').style.display = "none";
-            if (document.querySelector('.vjs-big-play-button')) document.querySelector('.vjs-big-play-button').style.display = "none";
-            video.autoplay = true;
-            video.onclick = function() {
-                if (video.paused) video.play();
-                else video.pause();
-            }
-        }
-    });
-
-
     // Video first loading
     video.onloadedmetadata = function() {
         if (framerate == 30) {
@@ -174,8 +153,8 @@ if (video) {
             frames_arr = [0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042, 0.041, 0.042, 0.042];
             frames_html5 = 1/40;
         }
-        frame = accurate_from_time(video.currentTime);
-        frames = accurate_from_time(video.duration);
+        frame = frameFromTime(video.currentTime);
+        frames = frameFromTime(video.duration);
         show_frm();
     }
     video.onloadedmetadata();
@@ -187,7 +166,7 @@ if (video) {
         if (seeking == video.currentTime) {
             return;
         }
-        frame = accurate_from_time(video.currentTime);
+        frame = frameFromTime(video.currentTime);
         show_frm();
     }
 }

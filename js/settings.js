@@ -1,10 +1,10 @@
 var video = document.querySelector('video');
-var controls = document.getElementsByClassName('control')[0];
+var controls = document.getElementsByClassName('frame-control')[0];
 if (video && controls) {
     var panel = document.createElement('div');
     panel.id = "panel";
-    panel.style.height = video.parentNode.offsetHeight+"px";
-    panel.style.left = video.parentNode.offsetWidth+"px";
+    panel.style.height = video.offsetHeight+"px";
+    panel.style.left = video.offsetWidth+"px";
     panel.style.display = "none";
 
     // VIDEO SPEED
@@ -129,6 +129,8 @@ if (video && controls) {
             return;
         }
         if (panel.style.display == "none") {
+            panel.style.height = video.offsetHeight+"px";
+            panel.style.left = video.offsetWidth+"px";
             panel.parentNode.style.position = "relative";
             panel.style.display = "block";
         } else {
@@ -137,7 +139,7 @@ if (video && controls) {
         }
     }
     var currentArtist = document.createElement('span');
-    currentArtist.id = "currentArtist";
+    currentArtist.id = "current-artist";
 
     controls.appendChild(currentArtist);
     controls.appendChild(settings);

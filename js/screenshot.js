@@ -1,5 +1,5 @@
 var video = document.querySelector('video');
-var controls = document.getElementsByClassName('control')[0];
+var controls = document.getElementsByClassName('frame-control')[0];
 
 if (video && controls) {
     chrome.storage.sync.get(['optionalInfo'], function(data) {
