@@ -12,30 +12,53 @@
 #panel input,#panel button {
     margin-bottom: 20px;
 }
-.control {
+.frame-control {
+    display: flex;
+    align-items: stretch;
     color: #666;
     min-width: 600px!important;
 }
-.controlDataVideo {
+.frame-button {
+    width: 40px;
+}
+.frame-info {
     text-align: center;
+    margin: 2px 14px 0px;
+}
+.input-number {
+    text-align: right;
+    padding: 4px 4px 4px 4px;
+    background-color: transparent !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+#total-frame::before, #total-timestamp::before {
+    content: ' / ';
+}
+
+.controlDataVideo {
     position: fixed;
+    justify-content: center;
     top: 50%;
     left: 50%;
     margin-top: 300px;
     transform: translate(-50%, 0%);
 }
 #booruLink {
-    margin-top: 20px;
+    display: block;
+    position: absolute;
     font-size: 14px;
-    display: inline-block;
     font-family: Tahoma;
+    transform: translate(0, 200%);
 }
 #divGif {
     margin: auto;
     text-align: center;
 }
-#currentArtist {
-    padding-left: 20px;
+#current-artist {
+    align-self: center;
+    flex: 1;
+    padding: 0 20px;
 }
 .gif {
     display: flex;

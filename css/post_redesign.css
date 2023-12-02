@@ -137,7 +137,7 @@ select {
     border-radius: 5px;
     padding: 3px 6px;
 }
-input[type="text"] {
+input[type="text"], input[type="password"], input[type="number"] {
     box-sizing: border-box;
     outline: none;
     border: none;
@@ -285,5 +285,4 @@ tbody tr:not(.even):not(.odd) > td:nth-child(1), th {
     #main-menu > ul li a {
         font-size: 12px;
     }
-    
 }
