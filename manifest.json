@@ -4,7 +4,7 @@
     "short_name": "Sakuga Extended",
     "description": "Enjoy a better experience with SAKUGABOORU! Previews on posts, frame control on videos...",
 
-    "version": "2.0.8",
+    "version": "2.0.9",
     "author": "ftLoic",
 
     "icons": {
@@ -24,7 +24,8 @@
     "content_scripts": [
         {
             "matches": ["*://www.sakugabooru.com/*", "*://sakugabooru.com/*"],
-            "run_at": "document_idle",
+            "run_at": "document_end",
+            "css": ["css/style.css"],
             "js": ["js/redesign.js"]
         },
         {
@@ -32,6 +33,12 @@
             "run_at": "document_idle",
             "css": ["css/index.css"],
             "js": ["js/index.js"]
+        },
+        {
+            "matches": ["*://www.sakugabooru.com/post/show/*", "*://sakugabooru.com/post/show/*", "*://www.sakugabooru.com/comment*", "*://sakugabooru.com/comment*"],
+            "run_at": "document_end",
+            "css": ["css/search.css"],
+            "js": ["js/commentsTooltips.js"]
         },
         {
             "matches": ["*://www.sakugabooru.com/post", "*://www.sakugabooru.com/post?*", "*://www.sakugabooru.com/post/popular*", "*://www.sakugabooru.com/pool/show*", "*://www.sakugabooru.com/user/show/*", "*://sakugabooru.com/post", "*://sakugabooru.com/post?*", "*://sakugabooru.com/post/popular*", "*://sakugabooru.com/pool/show*", "*://sakugabooru.com/user/show/*"],
@@ -47,7 +54,7 @@
         },
         {
             "matches": ["*://www.sakugabooru.com/post/show/*", "*://sakugabooru.com/post/show/*"],
-            "run_at": "document_idle",
+            "run_at": "document_end",
             "css": ["css/post.css", "css/search.css"],
             "js": ["js/frames.js", "js/settings.js", "js/libgif.js", "js/search.js", "js/screenshot.js"]
         },
@@ -71,7 +78,7 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["changelog.html", "css/*", "html/*", "fonts/*", "js/framesScript.js", "js/pictureEvents.js"],
+            "resources": ["changelog.html", "css/*", "html/*", "fonts/*", "js/framesScript.js", "js/pictureEvents.js", "js/resetVideo.js"],
             "matches" : ["*://www.sakugabooru.com/*", "*://sakugabooru.com/*"]
         }
     ]
