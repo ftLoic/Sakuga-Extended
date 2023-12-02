@@ -146,7 +146,6 @@ if (localStorage.tag_data) {
     window.addEventListener("message", function(event) {
         if (event.source != window) return;
         if (event.data.type && event.data.text && (event.data.type === "FROM_PAGE" && event.data.text === "we_can_catch_the_tag")) {
-            console.log("Request result:",event.data);
             chrome.storage.sync.get(['optionalInfo'], function(data) {
                 loadPosts(data.optionalInfo);
             });
