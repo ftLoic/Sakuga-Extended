@@ -7,3 +7,19 @@
     border-radius: 8px;
     overflow: hidden;
 }
+
+.comment-notice {
+    color: #777 !important;
+    font-size: 12px;
+}
+
+li.tag-type-ad {
+    color: var(--tag-ad, #cc9600)!important;
+}
+.tag-type-ad>a, #history .tag-type-ad, .color-tag-types .tag-type-ad {
+    color: var(--tag-ad, #cc9600)!important;
+}
+
+.role-hint {
+    color: #777 !important;
+}
