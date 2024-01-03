@@ -1,5 +1,7 @@
 // TODO: Comment notice
-// To maintain the quality of discussions, kindly contribute purposeful and insightful comments. Please prioritize sharing relevant information such as animator credits, production details, or constructive insights. Please refrain from discussing spoilers or engaging in plot-centred discussions.
+const scriptNotice = document.createElement('script');
+scriptNotice.src = chrome.runtime.getURL('js/commentsNotice.js');
+(document.head || document.documentElement).appendChild(scriptNotice);
 
 const comments = document.querySelectorAll('div.comment');
 
