@@ -235,6 +235,88 @@ function buildCommentModifiers() {
     script.src = chrome.runtime.getURL('js/pictureEvents.js');
     (document.head || document.documentElement).appendChild(script);
 }
+function loadADs() {
+    const sourceDiv = document.querySelector('#stats ul li');
+    if (sourceDiv && sourceDiv.innerText.startsWith("Source: ")) {
+        const source = sourceDiv.innerText.substring(8);
+        const artists = [...document.querySelectorAll('#tag-sidebar li.tag-type-artist')];
+        const exp = /(^|\(|\/)\s*(AD|AAD|CAD|EAD|Animation Director|[A-Za-z]+ AD|[A-Za-z]+ Animation Director|2nd KA|2nd Key Animator)\s*:\s*([^\/\)]*)/gi;
+
+        function findArtist(name) {
+            const fullName = artists.find(li => li.querySelector('a:last-of-type').innerText == name);
+            if (fullName) {
+                return fullName;
+            }
+
+            const lastName = artists.find(li => li.querySelector('a:last-of-type').innerText.endsWith(name));
+            if (lastName) {
+                return lastName;
+            }
+
+            return null;
+        }
+    
+        const matches = source.matchAll(exp);
+        for (let match of matches) {
+            const role = match[2].replace(/chief animation director/gi, "CAD").replace(/animation director/gi, "AD").replace(/key animator/gi, "KA");
+            const name = match[3].toLowerCase().trim();
+
+            // console.log(role, name);
+
+            const artist = findArtist(name);
+            if (artist) {
+                // artist.classList.remove('tag-type-artist');
+                // artist.classList.add('tag-type-ad');
+
+                const hintSpan = document.createElement('span');
+                hintSpan.classList.add('role-hint');
+                hintSpan.innerText = ` (${role.toLowerCase()})`;
+                
+                artist.querySelector('a:last-of-type').appendChild(hintSpan);
+            } else {
+                if (!document.querySelector('#tag-sidebar.untagged')) {
+                    const sidebarParent = document.getElementById('tag-sidebar').parentNode;
+
+                    const h5 = document.createElement('h5');
+                    h5.innerText = "Untagged";
+
+                    const notice = document.createElement('p');
+                    notice.setAttribute('style', "color: #777 !important;font-size: 10px;margin-top: 4px;");
+                    notice.innerText = "These artists are automatically retrieved from the Source field, but their level of contribution is either unknown or not significant enough to be tagged.";
+
+                    const untaggedSidebar = document.createElement('div');
+                    untaggedSidebar.id = "tag-sidebar";
+                    untaggedSidebar.classList.add('untagged');
+                    
+                    sidebarParent.appendChild(h5);
+                    sidebarParent.appendChild(untaggedSidebar);
+                    sidebarParent.appendChild(notice);
+                }
+
+                const artistTag = document.createElement('li');
+                artistTag.classList.add('tag-type-artist');
+
+                const artistTagHelp = document.createElement('a');
+                artistTagHelp.href = "/artist/show?name=" + name.replace(/ /g, "_");
+                artistTagHelp.innerText = "?";
+
+                const artistTagLink = document.createElement('a');
+                artistTagLink.href = "/post?tags=" + name.replace(/ /g, "_");
+                artistTagLink.innerText = name;
+
+                const hintSpan = document.createElement('span');
+                hintSpan.classList.add('role-hint');
+                hintSpan.innerText = ` (${role.toLowerCase()})`;
+
+                artistTagLink.appendChild(hintSpan);
+                artistTag.appendChild(artistTagHelp);
+                artistTag.appendChild(artistTagLink);
+
+                document.querySelector('#tag-sidebar.untagged').appendChild(artistTag);
+            }
+        }
+    }
+}
 function loadTimestamps() {
     artistFrames = [];
     artistPartsConfirmed = 0;
@@ -394,6 +476,7 @@ function initFrameScript() {
         }
     
         loadVideoEvents();
+        loadADs();
         loadTimestamps();
         buildCommentModifiers();
     }
