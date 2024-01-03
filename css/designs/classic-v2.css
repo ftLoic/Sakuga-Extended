@@ -14,8 +14,9 @@
     --main-video-bg3: rgb(14, 14, 14);
     --main-video-header: var(--main-video-bg3);
 
+    --tag-ad: #cc9600;
     --tag-artist: #cccc00;
-    --tag-copyright: #D0D;
-    --tag-meta: #CE0B0B;
+    --tag-copyright: #dd00dd;
+    --tag-meta: #ce0b0b;
     --tag-general: #d4d3c9;
 }
