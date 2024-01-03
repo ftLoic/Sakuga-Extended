@@ -2,6 +2,9 @@
 body, div, h1, h2, h3, h4, h5, h6, p, ul, li, dd, dt {
     color: var(--main-text)!important;
 }
+.note-body {
+    color: black !important;
+}
 *:not(.clearfix) > ul:not(#subnavbar):not(.flat-list) > li:not(#tag-sidebar li) a:not(.star-off) {
     color: var(--main-link)!important;
 }
