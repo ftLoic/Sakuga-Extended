@@ -90,7 +90,7 @@ function checkBox(name, id, value) {
     return dcheck;
 }
 
-var dsort   = select("Sort by ", "order", ['date', 'source', 'id', 'id_desc', 'score', 'score_asc', 'mpixels', 'mpixels_asc', 'random']);
+var dsort = select("Sort by ", "order", ['date', 'source', 'source_asc', 'id', 'id_desc', 'score', 'score_asc', 'mpixels', 'mpixels_asc', 'random']);
 var drating = select("Rating ", "rating", ['all', 'safe', 'questionable', 'explicit']);
 
 var dinput = input("Posts limit ", "limit", "number");

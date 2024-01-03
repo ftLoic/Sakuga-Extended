@@ -79,7 +79,6 @@ if (video && controls) {
                 filterStyle += options[i]+"("+filters[options[i]]['value']+filters[options[i]]['unit']+") ";
             }
         }
-        console.log(filterStyle);
         return filterStyle;
     }
 
