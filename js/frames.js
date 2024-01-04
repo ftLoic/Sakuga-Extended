@@ -240,7 +240,7 @@ function loadADs() {
     if (sourceDiv && sourceDiv.innerText.startsWith("Source: ")) {
         const source = sourceDiv.innerText.substring(8);
         const artists = [...document.querySelectorAll('#tag-sidebar li.tag-type-artist')];
-        const exp = /(?:^|,|\(|\/)\s*(?<roles>[a-z0-9 ]+(?:\s*[,\/]\s*[a-z0-9 ]+)*)\s*:\s*(?<names>(?:[^,\/\)]+)(?:,\s*[^:,)]+(?=,|$|\)))*)/gi;
+        const exp = /(?:^|,|\(|\/)\s*(?<roles>(?:Solo\s*)?(?:CD|SB|ED|AD|AAD|CAD|EAD|Animation Director|[A-Za-z]+ AD|[A-Za-z]+ Animation Director|KA|2nd KA|2nd Key Animator)(?:\s*[,\/]\s*(?:Solo\s*)?(?:CD|SB|ED|AD|AAD|CAD|EAD|Animation Director|[A-Za-z]+ AD|[A-Za-z]+ Animation Director|KA|2nd KA|2nd Key Animator))*)\s*:\s*(?<names>(?:[^,\/\)]{1,30})(?![^,\/\)])(?:,\s*[^:,)]+(?=,|$|\)))*)/gi;
 
         function findArtist(name) {
             const fullName = artists.find(li => li.querySelector('a:last-of-type').childNodes[0].nodeValue == name);
